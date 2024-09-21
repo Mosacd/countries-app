@@ -1,0 +1,226 @@
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Sofadi One";
+}
+
+html {
+  font-size: 14px;
+}
+
+body{
+  background-color: rgba(47, 94, 159, 0.251);
+}
+
+header {
+  background-color: #05203ce3;
+  color: white;
+  padding: 0px 5%;
+  height: 100px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+#title-Logo h1 {
+  font-size: 3rem;
+  white-space: nowrap;
+  padding-right:1rem;
+  cursor: pointer;
+}
+
+
+nav {
+  display: flex;
+  justify-content: flex-end;
+  flex-grow: 1;
+}
+
+.list {
+  display: flex;
+  align-items: center;
+  list-style-type: none;
+  font-size: 1.6rem;
+  gap: 1.5em;
+}
+
+.list li {
+  white-space: nowrap;
+}
+
+nav button {
+  border: 2px solid transparent;
+  border-radius: 15px;
+  padding: 10px;
+  background-color: inherit;
+  color: inherit;
+  font-size: inherit;
+  cursor: pointer;
+  transition: all 300ms;
+}
+
+nav button:hover {
+  background-color: white;
+  color: #05203ce3;
+}
+
+#title-Logo{
+  display: flex;
+  margin-right: auto;
+  padding-right: 3rem;;
+}
+
+main{
+  padding: 0px 50px;
+}
+
+#hero-div {
+  margin: auto;
+  border-radius: 20px;
+  border:3px #05203ce3;
+  border-style:groove;
+  margin-top: 40px;
+  background-image: url('./assets/R.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  width: 100%;
+  height: 70vh;
+  box-shadow: 2px 2px 3px #05203ce3;
+  position: relative;
+}
+
+#hero-div > div{
+  position: absolute;
+  top: 30%;
+  left: 10%;
+  z-index: 2;
+}
+
+#hero-div::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.048); 
+  z-index: 1; 
+}
+
+#hero-div h1{
+  font-size: 4rem;
+  letter-spacing: 0.3rem;
+  color: #05203ce3;
+  margin-bottom: 1rem;
+}
+
+#hero-div p{
+  font-size: 1.3rem;
+  color: #05203ce3;
+  margin-bottom: 3rem;
+}
+
+#hero-div button{
+  background-color: #05203ce3;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: 300ms;
+}
+
+#hero-div button:hover{
+  background-color: rgba(255, 255, 255, 0.701);
+  color:#05203ce3;
+  transform:scale(1.1);
+}
+
+#profile-card{
+  max-width: 300px;
+  overflow: auto;  
+  border: 3px solid #05203ce3;
+  background-color: #05203ce3;
+  border-radius: 20px;
+  margin: auto;
+  margin-top: 20px;
+  text-align: center;
+  color: white;
+  border-bottom-left-radius: 100px;
+  border-bottom-right-radius: 100px;
+  position: relative;
+  cursor: pointer;
+  margin-bottom: 100px;
+  transition: all 300ms;
+}
+
+#profile-card img{
+  width: 100%;
+  aspect-ratio: 7/5;
+  border-bottom: 5px solid white;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  
+}
+
+#profile-card h2{
+  font-size: 3rem;
+  margin-bottom: 10px;
+  background-color:#05203c;
+  border: 3px solid;
+  border-radius: 10px;
+  padding: 7px;
+  border-bottom-left-radius: 30px;
+  border-bottom-right-radius: 30px;
+}
+
+#profile-card h3{
+  margin: auto;
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  background-color: #05203c;
+  border: 3px solid;
+  border-radius: 10px;
+  width: fit-content;
+  padding: 10px;
+  border-bottom-left-radius: 30px;
+  border-bottom-right-radius: 30px;
+}
+
+#profile-card h4{
+  margin: auto;
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  background-color: #05203c;
+  border: 3px solid;
+  border-radius: 10px;
+  width: fit-content;
+  padding: 10px;
+  border-bottom-left-radius: 30px;
+  border-bottom-right-radius: 30px;
+}
+
+#profile-card:hover{
+  transform: scale(1.01);
+}
+
+
+#catalog{
+  font-size: 3rem;
+  margin: auto;
+  margin-top: 50px;
+  background-color: #05203ce3;
+  color: white;
+  border-radius: 20px;
+  border-bottom-left-radius: 100px;
+  border-bottom-right-radius: 100px;
+  padding: 15px;
+  text-align: center;
+}
+
+
+
