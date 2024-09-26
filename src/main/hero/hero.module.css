@@ -19,7 +19,6 @@
     left: 10%;
     z-index: 2;
   }
-
   .heroDiv::before {
     content: "";
     position: absolute;

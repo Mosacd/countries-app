@@ -11,3 +11,8 @@
     text-align: center;
   }
   
+  .catalogContent{
+    display: flex;
+  }
+
+  

@@ -1,4 +1,5 @@
 .productCard{
+    width: 300px;
     max-width: 300px;
     overflow: auto;  
     border: 3px solid #05203ce3;
