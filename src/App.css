@@ -120,6 +120,7 @@ main{
 #hero-div p{
   font-size: 1.3rem;
   color: #05203ce3;
+  font-weight:600;
   margin-bottom: 3rem;
 }
 
