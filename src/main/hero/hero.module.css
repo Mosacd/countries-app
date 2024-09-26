@@ -1,0 +1,64 @@
+  .heroDiv{
+    margin: auto;
+    border-radius: 20px;
+    border:3px #05203ce3;
+    border-style:groove;
+    background-image: url('./R.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+    width: 100%;
+    height: 70vh;
+    box-shadow: 2px 2px 3px #05203ce3;
+    position: relative;
+  }
+
+  .heroDiv > div{
+    position: absolute;
+    top: 30%;
+    left: 10%;
+    z-index: 2;
+  }
+
+  .heroDiv::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.048); 
+    z-index: 1; 
+  }
+  
+  .heroDiv h1{
+    font-size: 4rem;
+    letter-spacing: 0.3rem;
+    color: #05203ce3;
+    margin-bottom: 1rem;
+  }
+
+  .heroDiv p{
+    font-size: 1.3rem;
+    color: #05203ce3;
+    margin-bottom: 3rem;
+  }
+
+
+  .heroDiv button{
+    background-color: #05203ce3;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 1.4rem;
+    cursor: pointer;
+    transition: 300ms;
+  }
+  
+  .heroDiv button:hover{
+    background-color: rgba(255, 255, 255, 0.701);
+    color:#05203ce3;
+    transform:scale(1.1);
+  }
+  
