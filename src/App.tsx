@@ -3,7 +3,8 @@ import Home from '#/home';
 import Layout from '@/layout';
 import Hero from '#/home/hero';
 import Catalog from '#/home/catalog';
-function App() {
+
+const App:React.FC = () => {
 
 
   return (
