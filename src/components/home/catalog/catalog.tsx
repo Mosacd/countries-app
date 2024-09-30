@@ -1,7 +1,8 @@
 import styles from './catalog.module.css';
-import ImageComp from './imageComp/imageComp';
-import ProductCard from './productCard/productCard';
-import TextComp from './textComp/textComp';
+import ImageComp from './productCard/imageComp';
+import ProductCard from './productCard';
+import TextComp from './productCard/textComp';
+
 const Catalog:React.FC = () =>{
     
    
@@ -42,17 +43,10 @@ return(
         {countries.map((country, index) => {
             return(
                 <ProductCard key={index}>
-        <ImageComp src={country.imageUrl} alt={`Flag of ${country.name}`} />
-        <TextComp>
-                <h2>{country.name}</h2>
-                <h3>{country.population}</h3>
-                <h4>{country.capitalCity}</h4>
-                {/*aq mgoni shvilobilad gadacemas prosta chveulebriv
-                 propebad micema da textComp-is sxvanairad dawera jobda,
-                  ubralod mravalferovnebistvis shvilobilad gadavcem */}
-        </TextComp>
-        </ProductCard>)
-    })}
+                  <ImageComp src={country.imageUrl} alt={`Flag of ${country.name}`} />
+                  <TextComp name={country.name} population={country.population} capitalCity={country.capitalCity} />
+                </ProductCard>)
+            })}
     </div>
 
     </>

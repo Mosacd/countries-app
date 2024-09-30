@@ -1,14 +1,19 @@
-import './App.css'
-import Header from './header/header';
-import Main from './main/main';
+import '@/App.css'
+import Home from '#/home';
+import Layout from '@/layout';
+import Hero from '#/home/hero';
+import Catalog from '#/home/catalog';
 function App() {
 
-  
 
   return (
     <>
-      <Header></Header>
-      <Main></Main>
+      <Layout>
+        <Home>
+          <Hero/>
+          <Catalog/>
+        </Home>
+      </Layout>
     </>
   )
 }
