@@ -39,7 +39,7 @@
     white-space: nowrap;
   }
   
-  .nav button {
+  .link {
     border: 2px solid transparent;
     border-radius: 15px;
     padding: 10px;
@@ -48,9 +48,10 @@
     font-size: inherit;
     cursor: pointer;
     transition: all 300ms;
+    text-decoration: none;
   }
   
-  .nav button:hover {
+  .link:hover {
     background-color: white;
     color: #05203ce3;
   }
@@ -60,3 +61,4 @@
     margin-right: auto;
     padding-right: 3rem;;
   }
+

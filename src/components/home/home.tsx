@@ -1,11 +1,17 @@
 import styles from "./home.module.css";
 
-import { PropsWithChildren } from "react";
-const Main:React.FC<PropsWithChildren> = ({children}) =>{
+import { lazy } from "react";
+
+
+const LazyCatalog = lazy(() => import("./catalog/catalog"));
+const LazyHero = lazy(() => import("./hero/hero"));
+
+const Main:React.FC = () =>{
 
     return(
         <main className={styles.main}>
-            {children}            
+            <LazyHero/>
+            <LazyCatalog/>        
         </main>
     )
 }
