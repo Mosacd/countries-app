@@ -3,6 +3,12 @@ import styles from './contact.module.css';
 
 const Contact: React.FC = () => {
 
+/*
+ramdenadac vxvdebi custom validation-is dawera araa sachiro, amito enteris 
+dacherisas emailis swor formats da shevsebul velebs ar gatestavs.
+barem formasac noValidate-s mivcem
+*/
+
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
