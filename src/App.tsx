@@ -1,10 +1,14 @@
 import '@/App.css'
-import Home from '#/home';
+
 import Layout from '@/layout';
-import About from '#/about';
 import { Route,Routes,BrowserRouter } from 'react-router-dom';
-import { Suspense } from "react";
+import { lazy, Suspense } from "react";
 import PageNotFound from './components/pageNotFound/pageNotFound';
+import CardPage from './components/individualCardPage/individualCardPage';
+import Home from '#/home';
+
+const LazyContact = lazy(() => import('./components/contact/contact'));
+const LazyAbout = lazy(() => import('#/about'));
 
 const App:React.FC = () => {
 
@@ -12,15 +16,35 @@ const App:React.FC = () => {
   return (
     
     <BrowserRouter>
-    <Suspense fallback={<h1 style={{margin:'Auto',marginTop:'200px',width:'fit-content',fontSize:'6rem'}}>This page is loading</h1>}>
       <Routes>
         <Route  element={<Layout/>}>
-          <Route  path='/' element={<Home/>} />
-          <Route  path='/about' element={<About/>} />
+        
+        <Route  path='/' element={    
+          <Suspense fallback={<h1 style={{margin:'Auto',marginTop:'200px',width:'fit-content',fontSize:'6rem'}}>This page is loading</h1>}>
+                <Home/>
+          </Suspense>}/>
+       
+          <Route  path='/about' element={
+                      <Suspense fallback={<h1 style={{margin:'Auto',marginTop:'200px',width:'fit-content',fontSize:'6rem'}}>This page is loading</h1>}>
+            <LazyAbout/>
+            </Suspense>
+          } />
+
+          <Route  path='/contact' element={
+                      <Suspense fallback={<h1 style={{margin:'Auto',marginTop:'200px',width:'fit-content',fontSize:'6rem'}}>This page is loading</h1>}>
+            <LazyContact/>
+            </Suspense>
+          } />
+
+          <Route
+          path='/:id'
+          element={<CardPage/>}
+          />
+
         </Route>
         <Route path='*' element={<PageNotFound/>}></Route>
       </Routes>
-    </Suspense>
+  
       </BrowserRouter>
     
   )

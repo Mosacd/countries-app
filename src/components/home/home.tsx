@@ -1,17 +1,13 @@
 import styles from "./home.module.css";
-
-import { lazy } from "react";
-
-
-const LazyCatalog = lazy(() => import("./catalog/catalog"));
-const LazyHero = lazy(() => import("./hero/hero"));
+import Hero from "./hero";
+import Catalog from "./catalog";
 
 const Main:React.FC = () =>{
 
     return(
         <main className={styles.main}>
-            <LazyHero/>
-            <LazyCatalog/>        
+            <Hero/>
+            <Catalog/>        
         </main>
     )
 }

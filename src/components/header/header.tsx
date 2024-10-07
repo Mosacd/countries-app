@@ -11,7 +11,7 @@ const Header:React.FC = () =>{
           </div>
           <ul className={styles.list}>
             <li> <Link to={"/"} className={styles.link}>Home</Link></li>
-            <li><Link to={""} className={styles.link}>Services</Link></li>
+            <li> <Link to={"/contact"} className={styles.link}>Contact</Link></li>
             <li> <Link to={"/about"} className={styles.link}>About</Link></li>
           </ul>
         </nav>

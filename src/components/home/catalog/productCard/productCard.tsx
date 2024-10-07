@@ -1,14 +1,15 @@
+import { Link } from 'react-router-dom';
 import styles from './productCard.module.css';
 import { PropsWithChildren } from 'react';
 
-const ProductCard:React.FC<PropsWithChildren> = ({children}) => {
+const ProductCard:React.FC<PropsWithChildren<{id: string}>> = ({children, id}) => {
 
    
 
     return(
-    <div className={styles.productCard}>
+        <Link to={`/${id}`} className={styles.productCard}>
             {children}
-        </div>
+        </Link>
     )
 }
 

@@ -2,8 +2,6 @@
 .aboutdiv{
     margin: auto;
     max-width: 900px;
-    background-color: #05203ce3;
-    color: white;
     margin-top: 140px;
     padding: 50px 50px;
     border-radius: 20px;
@@ -11,4 +9,6 @@
 
 .aboutdiv p{
     font-size: 2rem;
+    text-align: center;
+    color:#05203ce3;
 }
