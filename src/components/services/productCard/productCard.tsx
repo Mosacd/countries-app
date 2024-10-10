@@ -7,9 +7,12 @@ const ProductCard:React.FC<PropsWithChildren<{id: string}>> = ({children, id}) =
    
 
     return(
-        <Link to={`/${id}`} className={styles.productCard}>
+        <div className={styles.productCard}>
             {children}
+            <Link to={`/services/${id}`} >
+            <button className={styles.button}>see more</button>
         </Link>
+        </div>
     )
 }
 

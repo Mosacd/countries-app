@@ -1,0 +1,74 @@
+.catalog{
+    font-size: 3rem;
+    margin: auto;
+    margin-top: 190px;
+    background-color: #05203de3;
+    width: fit-content;
+    color: white;
+    border-radius: 20px;
+    padding: 15px;
+    text-align: center;
+  }
+  
+  .catalogContent{
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  .bottom button{
+    margin: auto;
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    background-color: #05203c;
+    border: 3px solid;
+    border-radius: 10px;
+    width: fit-content;
+    padding: 10px;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+    color: white;
+    cursor: pointer;
+  }
+
+
+  .bottom{
+    width: 100%;
+    display: flex;
+    justify-content: end;
+    gap: 0px;
+  }
+
+  .sortDropdown{
+    margin: 20px auto;
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    background-color: #05203de3;
+    border: 3px solid;
+    border-radius: 10px;
+    width: fit-content;
+    padding: 10px;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+    color: white;
+    cursor: pointer;
+    font-size: 1.5rem;
+  }
+
+  .sortDropdown label{
+    font-size: 1.5rem;
+    margin-right: 20px;
+  }
+
+  .sortDropdown select{
+    background-color: transparent;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+  }
+
+  .sortDropdown select option{
+    background-color: #05203de3;
+    border: none;
+    color: white;
+  }

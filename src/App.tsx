@@ -7,6 +7,7 @@ import PageNotFound from './components/pageNotFound/pageNotFound';
 import CardPage from './components/individualCardPage/individualCardPage';
 import Home from '#/home';
 
+const LazyServices = lazy(() => import('./components/services/catalog') );
 const LazyContact = lazy(() => import('./components/contact/contact'));
 const LazyAbout = lazy(() => import('#/about'));
 
@@ -36,8 +37,14 @@ const App:React.FC = () => {
             </Suspense>
           } />
 
+          <Route  path='/services' element={
+                      <Suspense fallback={<h1 style={{margin:'Auto',marginTop:'200px',width:'fit-content',fontSize:'6rem'}}>This page is loading</h1>}>
+            <LazyServices/>
+            </Suspense>
+          } />
+
           <Route
-          path='/:id'
+          path='/services/:id'
           element={<CardPage/>}
           />
 
