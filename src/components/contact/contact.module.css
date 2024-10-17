@@ -60,3 +60,7 @@
 .intro p{
     max-width: 700px;
 }
+
+.error{
+    color: rgb(134, 48, 48);
+}
