@@ -166,7 +166,9 @@ const Catalog: React.FC = () => {
     errors: { countryName: '', population: '', capitalCity: '' },
   });
 
-  const handleAddCountry = () => {
+  const handleAddCountry = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log(1);
     if (!formState.errors.countryName && !formState.errors.population && !formState.errors.capitalCity) {
       const newId = (state.countryCount + 1).toString();
       const newCountry: Country = {
@@ -210,42 +212,42 @@ const Catalog: React.FC = () => {
         </select>
       </div>
 
-      <form className={styles.form}>
-        <input
-          type="text"
-          placeholder="Name"
-          value={formState.countryName}
-          onChange={(e) => formDispatch({ type: 'SetCountryName', payload: e.target.value })}
-        />
-        {formState.errors.countryName && <p className={styles.error}>{formState.errors.countryName}</p>}
+      <form onSubmit={handleAddCountry} className={styles.form}>
+  <input
+    type="text"
+    placeholder="Name"
+    value={formState.countryName}
+    onChange={(e) => formDispatch({ type: 'SetCountryName', payload: e.target.value })}
+  />
+  {formState.errors.countryName && <p className={styles.error}>{formState.errors.countryName}</p>}
 
-        <input
-          type="text"
-          placeholder="Population"
-          value={formState.population}
-          onChange={(e) => formDispatch({ type: 'SetPopulation', payload: e.target.value })}
-        />
-        {formState.errors.population && <p className={styles.error}>{formState.errors.population}</p>}
+  <input
+    type="text"
+    placeholder="Population"
+    value={formState.population}
+    onChange={(e) => formDispatch({ type: 'SetPopulation', payload: e.target.value })}
+  />
+  {formState.errors.population && <p className={styles.error}>{formState.errors.population}</p>}
 
-        <input
-          type="text"
-          placeholder="Capital City"
-          value={formState.capitalCity}
-          onChange={(e) => formDispatch({ type: 'SetCapitalCity', payload: e.target.value })}
-        />
-        {formState.errors.capitalCity && <p className={styles.error}>{formState.errors.capitalCity}</p>}
+  <input
+    type="text"
+    placeholder="Capital City"
+    value={formState.capitalCity}
+    onChange={(e) => formDispatch({ type: 'SetCapitalCity', payload: e.target.value })}
+  />
+  {formState.errors.capitalCity && <p className={styles.error}>{formState.errors.capitalCity}</p>}
 
-        <input
-          type="text"
-          placeholder="Image URL"
-          value={formState.imageUrl}
-          onChange={(e) => formDispatch({ type: 'SetImageUrl', payload: e.target.value })}
-        />
+  <input
+    type="text"
+    placeholder="Image URL"
+    value={formState.imageUrl}
+    onChange={(e) => formDispatch({ type: 'SetImageUrl', payload: e.target.value })}
+  />
 
-        <button type="button" onClick={handleAddCountry} disabled={!isFormValid}>
-          Add Country
-        </button>
-      </form>
+  <button type="submit" disabled={!isFormValid}>
+    Add Country
+  </button>
+</form>
 
       <div className={styles.catalogContent}>
         {state.countries.map((country, index) => (
