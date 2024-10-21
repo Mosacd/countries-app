@@ -1,7 +1,13 @@
 import React, { ChangeEvent, useState } from 'react';
 import styles from './contact.module.css';
+import { useParams } from 'react-router-dom';
+import { translations } from '../translations';
 
 const Contact: React.FC = () => {
+
+  const { lang } = useParams<{ lang: 'en' | 'ka' }>();  
+  const currentLang = lang || 'en';
+
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -25,7 +31,7 @@ const Contact: React.FC = () => {
     const value = e.target.value;
     setFirstName(value);
     if (value.length < 2) {
-      setErrors((prev) => ({ ...prev, firstName: 'First name should be at least 2 characters long' }));
+      setErrors((prev) => ({ ...prev, firstName: translations[currentLang].contact.errors.fnameerr }));
     } else {
       setErrors((prev) => ({ ...prev, firstName: '' }));
     }
@@ -35,7 +41,7 @@ const Contact: React.FC = () => {
     const value = e.target.value;
     setLastName(value);
     if (value.length < 4) {
-      setErrors((prev) => ({ ...prev, lastName: 'Last name should be at least 4 characters long' }));
+      setErrors((prev) => ({ ...prev, lastName: translations[currentLang].contact.errors.lnameerr }));
     } else {
       setErrors((prev) => ({ ...prev, lastName: '' }));
     }
@@ -45,7 +51,7 @@ const Contact: React.FC = () => {
     const value = e.target.value;
     setEmail(value);
     if (!validateEmail(value)) {
-      setErrors((prev) => ({ ...prev, email: 'Please enter a valid email address' }));
+      setErrors((prev) => ({ ...prev, email: translations[currentLang].contact.errors.emailerr }));
     } else {
       setErrors((prev) => ({ ...prev, email: '' }));
     }
@@ -55,7 +61,7 @@ const Contact: React.FC = () => {
     const value = e.target.value;
     setMessage(value);
     if (value.length < 10) {
-      setErrors((prev) => ({ ...prev, message: 'Message should be at least 10 characters long' }));
+      setErrors((prev) => ({ ...prev, message: translations[currentLang].contact.errors.messegeerr }));
     } else {
       setErrors((prev) => ({ ...prev, message: '' }));
     }
@@ -66,13 +72,13 @@ const Contact: React.FC = () => {
 
     
     if (!firstName || !lastName || !email || !message) {
-      setFormError('All fields must be filled out.');
+      setFormError(translations[currentLang].contact.errors.senderr1);
       return;
     }
 
     
     if (errors.firstName || errors.lastName || errors.email || errors.message) {
-      setFormError('Please fix the errors in the form before submitting.');
+      setFormError(translations[currentLang].contact.errors.senderr2);
       return;
     }
 
@@ -94,12 +100,12 @@ const Contact: React.FC = () => {
   return (
     <div className={styles.outerdiv}>
       <div className={styles.intro}>
-        <h1>Contact Us</h1>
-        <p>Got a question? We'd love to hear from you. Send us a message and we'll respond as soon as possible.</p>
+        <h1>{translations[currentLang].contact.title}</h1>
+        <p>{translations[currentLang].contact.text}</p>
       </div>
 
       <form onSubmit={handleSubmit} className={styles.form1} onKeyDown={handleKeyDown} noValidate>
-        <label htmlFor="firstName">First Name</label>
+        <label htmlFor="firstName">{translations[currentLang].contact.fname}</label>
         <input
           type="text"
           name="firstName"
@@ -111,7 +117,7 @@ const Contact: React.FC = () => {
         />
         {errors.firstName && <p className={styles.error}>{errors.firstName}</p>}
 
-        <label htmlFor="lastName">Last Name</label>
+        <label htmlFor="lastName">{translations[currentLang].contact.lname}</label>
         <input
           type="text"
           name="lastName"
@@ -123,7 +129,7 @@ const Contact: React.FC = () => {
         />
         {errors.lastName && <p className={styles.error}>{errors.lastName}</p>}
 
-        <label htmlFor="email">Email address</label>
+        <label htmlFor="email">{translations[currentLang].contact.email}</label>
         <input
           type="email"
           name="email"
@@ -135,7 +141,7 @@ const Contact: React.FC = () => {
         />
         {errors.email && <p className={styles.error}>{errors.email}</p>}
 
-        <label htmlFor="message">Message</label>
+        <label htmlFor="message">{translations[currentLang].contact.messege}</label>
         <textarea
           name="message"
           id="message"
@@ -148,9 +154,8 @@ const Contact: React.FC = () => {
         />
         {errors.message && <p className={styles.error}>{errors.message}</p>}
 
-        <input className={styles.submit} type="submit" value="Send" />
+        <input className={styles.submit} type="submit" value={translations[currentLang].contact.button}/>
 
-        {/* Display form-level error below the submit button */}
         {formError && <p className={styles.error}>{formError}</p>}
       </form>
     </div>

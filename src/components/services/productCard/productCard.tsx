@@ -1,6 +1,7 @@
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import styles from './productCard.module.css';
 import { PropsWithChildren, CSSProperties } from 'react';
+import { translations } from '@/components/translations';
 
 interface ProductCardProps {
   id: string;
@@ -8,11 +9,13 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<PropsWithChildren<ProductCardProps>> = ({ children, id, style }) => {
+  const { lang } = useParams<{ lang: 'en' | 'ka' }>();  
+ const currentlang = lang || 'en';
   return (
     <div className={styles.productCard} style={style}>
       {children}
-      <Link to={`/services/${id}`}>
-        <button className={styles.button}>see more</button>
+      <Link to={`${id}`}>
+        <button className={styles.button}>{translations[currentlang].services.card.seemore}</button>
       </Link>
     </div>
   );

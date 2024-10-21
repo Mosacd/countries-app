@@ -91,6 +91,7 @@
   }
 
   .form button{
+    min-width: 250px;
     width: 300px;
     border-radius: 10px;
     height: 35px;

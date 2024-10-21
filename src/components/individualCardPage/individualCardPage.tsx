@@ -5,6 +5,7 @@ import styles from './individualCardPage.module.css';
 
 const CardPage:React.FC = () => {
 
+const { lang } = useParams<{ lang: 'en' | 'ka' }>();  
      const {id} = useParams();
 
      const countryInfo = initialCountries.find((country) => country.id == id )
@@ -17,8 +18,8 @@ const CardPage:React.FC = () => {
 
     return(
             <div className={styles.cardpagediv}>
-                <h1>{countryInfo.name}</h1>
-                <p>{countryInfo.text}</p>
+                <h1>{lang === 'en'? countryInfo.capitalCityEn : countryInfo.capitalCityKa}</h1>
+                <p>{lang === 'en'? countryInfo.textEn : countryInfo.textKa}</p>
                 <img src={countryInfo.imageUrl} alt="image" />
             </div>
     )

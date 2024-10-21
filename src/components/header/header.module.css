@@ -39,7 +39,7 @@
     white-space: nowrap;
   }
   
-  .link {
+  .link, .button {
     border: 2px solid transparent;
     border-radius: 15px;
     padding: 10px;
@@ -50,8 +50,12 @@
     transition: all 300ms;
     text-decoration: none;
   }
+
+  .button{
+    font-size: 1rem;
+  }
   
-  .link:hover {
+  .link:hover, .button:hover {
     background-color: white;
     color: #05203ce3;
   }
