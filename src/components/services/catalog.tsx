@@ -9,10 +9,13 @@ import { translations } from '../translations';
 
 
 type FormState = {
-  countryName: string;
+  countryNameEn: string;
+  countryNameKa: string;
   population: string;
-  capitalCity: string;
+  capitalCityEn: string;
+  capitalCityKa: string;
   imageUrl: string;
+  imageFile: File | null;
   errors: {
     countryName: string;
     population: string;
@@ -21,42 +24,58 @@ type FormState = {
 };
 
 type FormAction =
-  | { type: 'SetCountryName'; payload: string }
+  | { type: 'SetCountryNameEn'; payload: string }
+  | { type: 'SetCountryNameKa'; payload: string }
   | { type: 'SetPopulation'; payload: string }
-  | { type: 'SetCapitalCity'; payload: string }
-  | { type: 'SetImageUrl'; payload: string }
+  | { type: 'SetCapitalCityEn'; payload: string }
+  | { type: 'SetCapitalCityKa'; payload: string }
+  | { type: 'SetImageFile'; payload: File | null }
+  | { type: 'SetImageBase64'; payload: string }
   | { type: 'ResetForm' };
 
 const formReducer = (state: FormState, action: FormAction): FormState => {
-
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const { lang } = useParams<{ lang: 'en' | 'ka' }>();  
+  
+// eslint-disable-next-line react-hooks/rules-of-hooks
+  const { lang } = useParams<{ lang: 'en' | 'ka' }>();
   const currentLang = lang || 'en';
 
   switch (action.type) {
-    case 'SetCountryName': {
+    case 'SetCountryNameEn': {
       const error = action.payload.length < 3 ? translations[currentLang].services.from.errors.nameerr : '';
-      return { ...state, countryName: action.payload, errors: { ...state.errors, countryName: error } };
+      return { ...state, countryNameEn: action.payload, errors: { ...state.errors, countryName: error } };
+    }
+    case 'SetCountryNameKa': {
+      const error = action.payload.length < 3 ? translations[currentLang].services.from.errors.nameerr : '';
+      return { ...state, countryNameKa: action.payload, errors: { ...state.errors, countryName: error } };
     }
     case 'SetPopulation': {
       const error = isNaN(Number(action.payload)) || Number(action.payload) <= 0
-        ? translations[currentLang].services.from.errors.populationerr
+        ? translations.en.services.from.errors.populationerr
         : '';
       return { ...state, population: action.payload, errors: { ...state.errors, population: error } };
     }
-    case 'SetCapitalCity': {
+    case 'SetCapitalCityEn': {
       const error = action.payload.length < 3 ? translations[currentLang].services.from.errors.capitalcityerr : '';
-      return { ...state, capitalCity: action.payload, errors: { ...state.errors, capitalCity: error } };
+      return { ...state, capitalCityEn: action.payload, errors: { ...state.errors, capitalCity: error } };
     }
-    case 'SetImageUrl':
+    case 'SetCapitalCityKa': {
+      const error = action.payload.length < 3 ? translations[currentLang].services.from.errors.capitalcityerr : '';
+      return { ...state, capitalCityKa: action.payload, errors: { ...state.errors, capitalCity: error } };
+    }
+    case 'SetImageFile':
+      return { ...state, imageFile: action.payload };
+    case 'SetImageBase64':
       return { ...state, imageUrl: action.payload };
     case 'ResetForm':
       return {
-        countryName: '',
+        countryNameEn: '',
+        countryNameKa: '',
         population: '',
-        capitalCity: '',
+        capitalCityEn: '',
+        capitalCityKa: '',
         imageUrl: '',
-        errors: { countryName: '', population: '', capitalCity: '' }
+        imageFile: null,
+        errors: { countryName: '', population: '', capitalCity: '' },
       };
     default:
       return state;
@@ -171,10 +190,13 @@ const Catalog: React.FC = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const [formState, formDispatch] = useReducer(formReducer, {
-    countryName: '',
+    countryNameKa: '',
+    countryNameEn: '',
     population: '',
-    capitalCity: '',
+    capitalCityKa: '',
+    capitalCityEn: '',
     imageUrl: '',
+    imageFile: null,
     errors: { countryName: '', population: '', capitalCity: '' },
   });
 
@@ -185,11 +207,11 @@ const Catalog: React.FC = () => {
       const newId = (state.countryCount + 1).toString();
       const newCountry: Country = {
         id: newId,
-        nameEn: formState.countryName,
-        nameKa: '',
+        nameEn: formState.countryNameEn,
+        nameKa: formState.capitalCityKa,
         population: parseInt(formState.population),
-        capitalCityEn: formState.capitalCity,
-        capitalCityKa: '',
+        capitalCityEn: formState.capitalCityEn,
+        capitalCityKa: formState.capitalCityKa,
         imageUrl: formState.imageUrl,
         likecount: 0,
         textEn: '',
@@ -202,13 +224,32 @@ const Catalog: React.FC = () => {
     }
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file && (file.type === 'image/jpeg' || file.type === 'image/png')) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        formDispatch({ type: 'SetImageFile', payload: file });
+        formDispatch({ type: 'SetImageBase64', payload: reader.result as string });
+      };
+      reader.readAsDataURL(file);  
+    } else {
+      formDispatch({ type: 'SetImageFile', payload: null });
+      formDispatch({ type: 'SetImageBase64', payload: '' });  
+    }
+  };
+  
+
   const isFormValid =
     !formState.errors.countryName &&
     !formState.errors.population &&
     !formState.errors.capitalCity &&
-    formState.countryName.length > 2 &&
-    formState.capitalCity.length > 2 &&
-    Number(formState.population) > 0;
+    formState.countryNameEn.length > 2 &&
+    formState.countryNameKa.length > 2 &&
+    formState.capitalCityEn.length > 2 &&
+    formState.capitalCityKa.length > 2 &&
+    Number(formState.population) > 0 &&
+    formState.imageFile !== null;
 
   return (
     <>
@@ -228,41 +269,55 @@ const Catalog: React.FC = () => {
       </div>
 
       <form onSubmit={handleAddCountry} className={styles.form}>
-  <input
-    type="text"
-    placeholder={translations[currentLang].services.from.name}
-    value={formState.countryName}
-    onChange={(e) => formDispatch({ type: 'SetCountryName', payload: e.target.value })}
-  />
-  {formState.errors.countryName && <p className={styles.error}>{formState.errors.countryName}</p>}
+        <input
+          type="text"
+          placeholder={translations[currentLang].services.from.nameEn}
+          value={formState.countryNameEn}
+          onChange={(e) => formDispatch({ type: 'SetCountryNameEn', payload: e.target.value })}
+        />
+        <input
+          type="text"
+          placeholder={translations[currentLang].services.from.nameKa}
+          value={formState.countryNameKa}
+          onChange={(e) => formDispatch({ type: 'SetCountryNameKa', payload: e.target.value })}
+        />
+        {formState.errors.countryName && <p className={styles.error}>{formState.errors.countryName}</p>}
 
-  <input
-    type="text"
-    placeholder={translations[currentLang].services.from.population}
-    value={formState.population}
-    onChange={(e) => formDispatch({ type: 'SetPopulation', payload: e.target.value })}
-  />
-  {formState.errors.population && <p className={styles.error}>{formState.errors.population}</p>}
+        <input
+          type="text"
+          placeholder={translations[currentLang].services.from.population}
+          value={formState.population}
+          onChange={(e) => formDispatch({ type: 'SetPopulation', payload: e.target.value })}
+        />
+        {formState.errors.population && <p className={styles.error}>{formState.errors.population}</p>}
 
-  <input
-    type="text"
-    placeholder={translations[currentLang].services.from.capcity}
-    value={formState.capitalCity}
-    onChange={(e) => formDispatch({ type: 'SetCapitalCity', payload: e.target.value })}
-  />
-  {formState.errors.capitalCity && <p className={styles.error}>{formState.errors.capitalCity}</p>}
+        <input
+          type="text"
+          placeholder={translations[currentLang].services.from.capcityEn}
+          value={formState.capitalCityEn}
+          onChange={(e) => formDispatch({ type: 'SetCapitalCityEn', payload: e.target.value })}
+        />
+        <input
+          type="text"
+          placeholder={translations[currentLang].services.from.capcityKa}
+          value={formState.capitalCityKa}
+          onChange={(e) => formDispatch({ type: 'SetCapitalCityKa', payload: e.target.value })}
+        />
+        {formState.errors.capitalCity && <p className={styles.error}>{formState.errors.capitalCity}</p>}
 
-  <input
-    type="text"
-    placeholder={translations[currentLang].services.from.img}
-    value={formState.imageUrl}
-    onChange={(e) => formDispatch({ type: 'SetImageUrl', payload: e.target.value })}
-  />
+        <input
+          type="file"
+          accept="image/png, image/jpeg"
+          onChange={handleFileChange}
+        />
+        {formState.imageFile === null && <p className={styles.error}>Please upload a valid image file (JPG/PNG).</p>}
 
-  <button type="submit" disabled={!isFormValid}>
-  {translations[currentLang].services.from.button}
-  </button>
-</form>
+        <button type="submit" disabled={!isFormValid}>
+          {translations[currentLang].services.from.button}
+        </button>
+        {!isFormValid && <p className={styles.error}>{"fill with valid inputs"}</p>}
+      </form>
+
 
       <div className={styles.catalogContent}>
         {state.countries.map((country, index) => (

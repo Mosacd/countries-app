@@ -75,6 +75,7 @@
 
   .form{
     display: flex;
+    flex-direction: column;
     gap: 10px;
     margin-bottom: 30px;
   }
@@ -90,7 +91,7 @@
     margin-bottom: 10px;
   }
 
-  .form button{
+  .form button, .formchangebutt{
     min-width: 250px;
     width: 300px;
     border-radius: 10px;
@@ -99,4 +100,11 @@
     background-color:#05203ce3;
     text-align:center;
     color: white;
+  }
+
+
+  .formchangebutt{
+    margin: auto;
+    display: block;
+    margin-bottom: 20px;
   }

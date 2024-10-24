@@ -50,16 +50,19 @@ export const translations = {
             desc: 'Descending',
         },
         from:{
-            name: 'Name',
+            nameEn: 'Name(English)',
+            nameKa: 'Name(Georgian)',
             population: 'Population',
-            capcity: 'Capital City',
+            capcityEn: 'Capital City(English)',
+            capcityKa: 'Capital City(English)',
             img: 'Image URL',
             button: 'Add Country',
             errors:{
                 nameerr: 'Country name must be at least 3 characters',
                 populationerr: 'Population must be a number greater than 0',
                 capitalcityerr: 'Capital city must be at least 3 characters',
-            }
+            },
+            languagechangebutton: 'change to georgian form',
         },
         card:{
             like: 'like',
@@ -123,17 +126,21 @@ export const translations = {
             desc: 'ნაკლებობით',
             },
             from:{
-                name: 'სახელი',
+                nameEn: 'სახელი(ინგლისური)',
+                nameKa: 'სახელი(ქართული)',
                 population: 'პოპულაცია',
-                capcity: 'დედაქალაქი',
+                capcityEn: 'დედაქალაქი(ინგლისური)',
+                capcityKa: 'დედაქალაქი(ქართული)',
                 img: 'სურათი',
                 button: 'დაამატე ქვეყანა',
                 errors:{
                     nameerr: 'ქვეყნის სახელი უნდა იყოს მინიმუმ 3 სიმბოლო',
                     populationerr: 'მოსახლეობა უნდა იყოს 0-ზე მეტი რიცხვი',
                     capitalcityerr: "დედაქალაქი უნდა შედგებოდეს მინიმუმ 3 სიმბოლოსგან",
-                }
+                },
+                languagechangebutton: 'გადაცვალე ინგლისურ ფორმაზე',
             },
+            
             card:{
                 like: 'მოწონება',
                 delete: 'წაშლა',

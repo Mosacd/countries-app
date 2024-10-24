@@ -6,15 +6,14 @@ import { translations } from '../translations';
 
 const Header:React.FC = () =>{
 
-  const { lang } = useParams<{ lang: 'en' | 'ka' }>();   
+  const { lang } = useParams<{ lang: 'en' | 'ka' }>();  
+  const currentLang = lang || 'en'; 
   const navigate = useNavigate();
-
-
-  const currentLang = lang || 'en';
-
+  
   const toggleLanguage = () => {
-    const newLang = lang === 'en' ? 'ka' : 'en'; 
-    navigate(`/${newLang}`); 
+    const newLang = lang === 'en' ? 'ka' : 'en';
+    const toNavigate = `/${newLang}${location.pathname.slice(3)}`  
+    navigate(toNavigate);
   };
 
     return(
