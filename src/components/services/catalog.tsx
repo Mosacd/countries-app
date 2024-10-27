@@ -166,7 +166,7 @@ const Catalog: React.FC = () => {
       case "SetPopulation": {
         const error =
           isNaN(Number(action.payload)) || Number(action.payload) <= 0
-            ? translations.en.services.from.errors.populationerr
+            ? translations[currentLang].services.from.errors.populationerr
             : "";
         return {
           ...state,
