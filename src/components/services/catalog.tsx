@@ -32,8 +32,6 @@ type FormAction =
   | { type: "SetImageBase64"; payload: string }
   | { type: "ResetForm" };
 
-
-
 type State = {
   countries: Country[];
   sortOrder: string;
@@ -141,7 +139,6 @@ const Catalog: React.FC = () => {
   const { lang } = useParams<{ lang: "en" | "ka" }>();
   const currentLang = lang || "en";
 
-
   const formReducer = (state: FormState, action: FormAction): FormState => {
     switch (action.type) {
       case "SetCountryNameEn": {
@@ -218,7 +215,7 @@ const Catalog: React.FC = () => {
         return state;
     }
   };
-  
+
   const initialState: State = {
     countries: initialCountries,
     sortOrder: "",
@@ -240,7 +237,7 @@ const Catalog: React.FC = () => {
 
   const handleAddCountry = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
+
     if (
       !formState.errors.countryName &&
       !formState.errors.population &&
