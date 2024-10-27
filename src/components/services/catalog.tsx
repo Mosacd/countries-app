@@ -32,86 +32,7 @@ type FormAction =
   | { type: "SetImageBase64"; payload: string }
   | { type: "ResetForm" };
 
-const formReducer = (state: FormState, action: FormAction): FormState => {
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const { lang } = useParams<{ lang: "en" | "ka" }>();
-  const currentLang = lang || "en";
 
-  switch (action.type) {
-    case "SetCountryNameEn": {
-      const error =
-        action.payload.length < 3
-          ? translations[currentLang].services.from.errors.nameerr
-          : "";
-      return {
-        ...state,
-        countryNameEn: action.payload,
-        errors: { ...state.errors, countryName: error },
-      };
-    }
-    case "SetCountryNameKa": {
-      const error =
-        action.payload.length < 3
-          ? translations[currentLang].services.from.errors.nameerr
-          : "";
-      return {
-        ...state,
-        countryNameKa: action.payload,
-        errors: { ...state.errors, countryName: error },
-      };
-    }
-    case "SetPopulation": {
-      const error =
-        isNaN(Number(action.payload)) || Number(action.payload) <= 0
-          ? translations.en.services.from.errors.populationerr
-          : "";
-      return {
-        ...state,
-        population: action.payload,
-        errors: { ...state.errors, population: error },
-      };
-    }
-    case "SetCapitalCityEn": {
-      const error =
-        action.payload.length < 3
-          ? translations[currentLang].services.from.errors.capitalcityerr
-          : "";
-      return {
-        ...state,
-        capitalCityEn: action.payload,
-        errors: { ...state.errors, capitalCity: error },
-      };
-    }
-    case "SetCapitalCityKa": {
-      const error =
-        action.payload.length < 3
-          ? translations[currentLang].services.from.errors.capitalcityerr
-          : "";
-      return {
-        ...state,
-        capitalCityKa: action.payload,
-        errors: { ...state.errors, capitalCity: error },
-      };
-    }
-    case "SetImageFile":
-      return { ...state, imageFile: action.payload };
-    case "SetImageBase64":
-      return { ...state, imageUrl: action.payload };
-    case "ResetForm":
-      return {
-        countryNameEn: "",
-        countryNameKa: "",
-        population: "",
-        capitalCityEn: "",
-        capitalCityKa: "",
-        imageUrl: "",
-        imageFile: null,
-        errors: { countryName: "", population: "", capitalCity: "" },
-      };
-    default:
-      return state;
-  }
-};
 
 type State = {
   countries: Country[];
@@ -220,6 +141,84 @@ const Catalog: React.FC = () => {
   const { lang } = useParams<{ lang: "en" | "ka" }>();
   const currentLang = lang || "en";
 
+
+  const formReducer = (state: FormState, action: FormAction): FormState => {
+    switch (action.type) {
+      case "SetCountryNameEn": {
+        const error =
+          action.payload.length < 3
+            ? translations[currentLang].services.from.errors.nameerr
+            : "";
+        return {
+          ...state,
+          countryNameEn: action.payload,
+          errors: { ...state.errors, countryName: error },
+        };
+      }
+      case "SetCountryNameKa": {
+        const error =
+          action.payload.length < 3
+            ? translations[currentLang].services.from.errors.nameerr
+            : "";
+        return {
+          ...state,
+          countryNameKa: action.payload,
+          errors: { ...state.errors, countryName: error },
+        };
+      }
+      case "SetPopulation": {
+        const error =
+          isNaN(Number(action.payload)) || Number(action.payload) <= 0
+            ? translations.en.services.from.errors.populationerr
+            : "";
+        return {
+          ...state,
+          population: action.payload,
+          errors: { ...state.errors, population: error },
+        };
+      }
+      case "SetCapitalCityEn": {
+        const error =
+          action.payload.length < 3
+            ? translations[currentLang].services.from.errors.capitalcityerr
+            : "";
+        return {
+          ...state,
+          capitalCityEn: action.payload,
+          errors: { ...state.errors, capitalCity: error },
+        };
+      }
+      case "SetCapitalCityKa": {
+        const error =
+          action.payload.length < 3
+            ? translations[currentLang].services.from.errors.capitalcityerr
+            : "";
+        return {
+          ...state,
+          capitalCityKa: action.payload,
+          errors: { ...state.errors, capitalCity: error },
+        };
+      }
+      case "SetImageFile":
+        return { ...state, imageFile: action.payload };
+      case "SetImageBase64":
+        return { ...state, imageUrl: action.payload };
+      case "ResetForm":
+        return {
+          countryNameEn: "",
+          countryNameKa: "",
+          population: "",
+          capitalCityEn: "",
+          capitalCityKa: "",
+          imageUrl: "",
+          imageFile: null,
+          errors: { countryName: "", population: "", capitalCity: "" },
+        };
+      default:
+        return state;
+    }
+  };
+  
   const initialState: State = {
     countries: initialCountries,
     sortOrder: "",
@@ -241,7 +240,7 @@ const Catalog: React.FC = () => {
 
   const handleAddCountry = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(1);
+    
     if (
       !formState.errors.countryName &&
       !formState.errors.population &&
