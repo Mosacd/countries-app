@@ -1,14 +1,13 @@
-
-.aboutdiv{
-    margin: auto;
-    max-width: 900px;
-    margin-top: 140px;
-    padding: 50px 50px;
-    border-radius: 20px;
+.aboutdiv {
+  margin: auto;
+  max-width: 900px;
+  margin-top: 140px;
+  padding: 50px 50px;
+  border-radius: 20px;
 }
 
-.aboutdiv p{
-    font-size: 2rem;
-    text-align: center;
-    color:#05203ce3;
+.aboutdiv p {
+  font-size: 2rem;
+  text-align: center;
+  color: #05203ce3;
 }

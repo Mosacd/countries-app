@@ -1,31 +1,28 @@
-.productCard{
-    width: 300px;
-    max-width: 300px;
-    overflow: auto;  
-    border: 3px solid #05203ce3;
-    background-color: #05203ce3;
-    border-radius: 20px;
-    margin-top: 20px;
-    text-align: center;
-    color: white;
-    position: relative;
-    margin-bottom: 100px;
-    transition: all 300ms;
-    text-decoration: none;
-  }
-  
+.productCard {
+  width: 300px;
+  max-width: 300px;
+  overflow: auto;
+  border: 3px solid #05203ce3;
+  background-color: #05203ce3;
+  border-radius: 20px;
+  margin-top: 20px;
+  text-align: center;
+  color: white;
+  position: relative;
+  margin-bottom: 100px;
+  transition: all 300ms;
+  text-decoration: none;
+}
 
-.button{
-    margin: auto;
-    font-size: 1.2rem;
-    margin-bottom: 10px;
-    background-color: #05203c;
-    border: 3px solid;
-    border-radius: 20px;
-    width: fit-content;
-    padding: 10px;
-    color: white;
-    cursor: pointer;
-  }
-
-
+.button {
+  margin: auto;
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  background-color: #05203c;
+  border: 3px solid;
+  border-radius: 20px;
+  width: fit-content;
+  padding: 10px;
+  color: white;
+  cursor: pointer;
+}

@@ -1,1 +1,1 @@
-export {default} from './textComp';
+export { default } from "./textComp";

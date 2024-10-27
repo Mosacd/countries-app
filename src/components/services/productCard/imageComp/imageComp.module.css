@@ -1,7 +1,7 @@
-.productImage{
-    width: 100%;
-    aspect-ratio: 7/5;
-    border-bottom: 5px solid white;
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
-  }
+.productImage {
+  width: 100%;
+  aspect-ratio: 7/5;
+  border-bottom: 5px solid white;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}

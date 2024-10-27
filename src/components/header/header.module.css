@@ -1,68 +1,66 @@
 .header {
-    position: fixed;
-    top: 0;
-    background-color: #05203ce3;
-    color: white;
-    padding: 0px 5%;
-    height: 100px;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    z-index: 3;
-  }
-  
-  
-  
-  .titleLogo h1 {
-    font-size: 3rem;
-    white-space: nowrap;
-    padding-right:1rem;
-    cursor: pointer;
-  }
-  
-  
-  .nav {
-    display: flex;
-    justify-content: flex-end;
-    flex-grow: 1;
-  }
-  
-  .list {
-    display: flex;
-    align-items: center;
-    list-style-type: none;
-    font-size: 1.6rem;
-    gap: 1.5em;
-  }
-  
-  .list li {
-    white-space: nowrap;
-  }
-  
-  .link, .button {
-    border: 2px solid transparent;
-    border-radius: 15px;
-    padding: 10px;
-    background-color: inherit;
-    color: inherit;
-    font-size: inherit;
-    cursor: pointer;
-    transition: all 300ms;
-    text-decoration: none;
-  }
+  position: fixed;
+  top: 0;
+  background-color: #05203ce3;
+  color: white;
+  padding: 0px 5%;
+  height: 100px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  z-index: 3;
+}
 
-  .button{
-    font-size: 1rem;
-  }
-  
-  .link:hover, .button:hover {
-    background-color: white;
-    color: #05203ce3;
-  }
-  
-  .titleLogo{
-    display: flex;
-    margin-right: auto;
-    padding-right: 3rem;;
-  }
+.titleLogo h1 {
+  font-size: 3rem;
+  white-space: nowrap;
+  padding-right: 1rem;
+  cursor: pointer;
+}
 
+.nav {
+  display: flex;
+  justify-content: flex-end;
+  flex-grow: 1;
+}
+
+.list {
+  display: flex;
+  align-items: center;
+  list-style-type: none;
+  font-size: 1.6rem;
+  gap: 1.5em;
+}
+
+.list li {
+  white-space: nowrap;
+}
+
+.link,
+.button {
+  border: 2px solid transparent;
+  border-radius: 15px;
+  padding: 10px;
+  background-color: inherit;
+  color: inherit;
+  font-size: inherit;
+  cursor: pointer;
+  transition: all 300ms;
+  text-decoration: none;
+}
+
+.button {
+  font-size: 1rem;
+}
+
+.link:hover,
+.button:hover {
+  background-color: white;
+  color: #05203ce3;
+}
+
+.titleLogo {
+  display: flex;
+  margin-right: auto;
+  padding-right: 3rem;
+}

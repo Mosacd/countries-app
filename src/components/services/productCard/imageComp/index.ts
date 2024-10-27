@@ -1,1 +1,1 @@
-export {default} from './imageComp';
+export { default } from "./imageComp";

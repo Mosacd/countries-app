@@ -1,38 +1,36 @@
-.textContent h2{
-    font-size: 3rem;
-    margin-bottom: 10px;
-    background-color:#05203c;
-    border: 3px solid;
-    border-radius: 10px;
-    padding: 7px;
-    border-bottom-left-radius: 30px;
-    border-bottom-right-radius: 30px;
-  }
-  
-  .textContent h3{
-    margin: auto;
-    font-size: 1.5rem;
-    margin-bottom: 10px;
-    background-color: #05203c;
-    border: 3px solid;
-    border-radius: 10px;
-    width: fit-content;
-    padding: 10px;
-    border-bottom-left-radius: 30px;
-    border-bottom-right-radius: 30px;
-  }
+.textContent h2 {
+  font-size: 3rem;
+  margin-bottom: 10px;
+  background-color: #05203c;
+  border: 3px solid;
+  border-radius: 10px;
+  padding: 7px;
+  border-bottom-left-radius: 30px;
+  border-bottom-right-radius: 30px;
+}
 
-  .textContent h4{
-    margin: auto;
-    font-size: 1.2rem;
-    margin-bottom: 10px;
-    background-color: #05203c;
-    border: 3px solid;
-    border-radius: 10px;
-    width: fit-content;
-    padding: 10px;
-    border-bottom-left-radius: 30px;
-    border-bottom-right-radius: 30px;
-  }
+.textContent h3 {
+  margin: auto;
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  background-color: #05203c;
+  border: 3px solid;
+  border-radius: 10px;
+  width: fit-content;
+  padding: 10px;
+  border-bottom-left-radius: 30px;
+  border-bottom-right-radius: 30px;
+}
 
-  
+.textContent h4 {
+  margin: auto;
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  background-color: #05203c;
+  border: 3px solid;
+  border-radius: 10px;
+  width: fit-content;
+  padding: 10px;
+  border-bottom-left-radius: 30px;
+  border-bottom-right-radius: 30px;
+}
