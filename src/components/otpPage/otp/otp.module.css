@@ -1,0 +1,13 @@
+
+.container{
+        padding: 200px;
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+}
+
+.container input{
+    padding: 20px;
+    font-size: 25px;
+    width: 80px;
+}

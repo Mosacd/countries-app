@@ -54,6 +54,12 @@ const Header: React.FC = () => {
               {translations[currentLang].header.about}
             </Link>
           </li>
+          <li>
+            {" "}
+            <Link to={"otpPage"} className={styles.link}>
+              OtpPage
+            </Link>
+          </li>
           <button className={styles.button} onClick={toggleLanguage}>
             {translations[currentLang].header.switch_language}
           </button>

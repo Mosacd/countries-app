@@ -10,6 +10,7 @@ import Home from "#/home";
 const LazyServices = lazy(() => import("./components/services/catalog"));
 const LazyContact = lazy(() => import("./components/contact/contact"));
 const LazyAbout = lazy(() => import("#/about"));
+const LazyOtp = lazy(() => import("#/otpPage/otpPage"));
 
 const App: React.FC = () => {
   return (
@@ -97,6 +98,27 @@ const App: React.FC = () => {
                 }
               >
                 <LazyServices />
+              </Suspense>
+            }
+          />
+          <Route
+            path="otpPage"
+            element={
+              <Suspense
+                fallback={
+                  <h1
+                    style={{
+                      margin: "Auto",
+                      marginTop: "200px",
+                      width: "fit-content",
+                      fontSize: "6rem",
+                    }}
+                  >
+                    This page is loading
+                  </h1>
+                }
+              >
+                <LazyOtp/>
               </Suspense>
             }
           />
