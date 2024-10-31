@@ -1,16 +1,20 @@
-import React, { useState, useRef, ChangeEvent, KeyboardEvent, ClipboardEvent } from "react";
+import React, {
+  useState,
+  useRef,
+  ChangeEvent,
+  KeyboardEvent,
+  ClipboardEvent,
+} from "react";
 import styles from "./Otp.module.css";
 
-
-
-const Otp: React.FC<{length:number}> = ({ length }) => {
+const Otp: React.FC<{ length: number }> = ({ length }) => {
   const [inputs, setInputs] = useState(Array(length).fill(""));
   const inputRefs = useRef<HTMLInputElement[]>([]);
 
-  
   const handleChange = (e: ChangeEvent<HTMLInputElement>, index: number) => {
     const { value } = e.target;
-    if (/^\d$/.test(value)) { // Only allow single-digit numbers
+    if (/^\d$/.test(value)) {
+      // Only allow single-digit numbers
       const newInputs = [...inputs];
       newInputs[index] = value;
       setInputs(newInputs);
@@ -23,7 +27,10 @@ const Otp: React.FC<{length:number}> = ({ length }) => {
     }
   };
 
-  const handleBackspace = (e: KeyboardEvent<HTMLInputElement>, index: number) => {
+  const handleBackspace = (
+    e: KeyboardEvent<HTMLInputElement>,
+    index: number,
+  ) => {
     if (e.key === "Backspace") {
       const newInputs = [...inputs];
       if (inputs[index]) {
@@ -35,11 +42,15 @@ const Otp: React.FC<{length:number}> = ({ length }) => {
       setInputs(newInputs);
     }
   };
-  
 
-  const handlePaste = (e: ClipboardEvent<HTMLInputElement>, startIndex: number) => {
+  const handlePaste = (
+    e: ClipboardEvent<HTMLInputElement>,
+    startIndex: number,
+  ) => {
     e.preventDefault();
-    const pasteData = e.clipboardData.getData("text").slice(0, length - startIndex);
+    const pasteData = e.clipboardData
+      .getData("text")
+      .slice(0, length - startIndex);
     const newInputs = [...inputs];
     let currentIndex = startIndex;
 

@@ -118,7 +118,7 @@ const App: React.FC = () => {
                   </h1>
                 }
               >
-                <LazyOtp/>
+                <LazyOtp />
               </Suspense>
             }
           />
