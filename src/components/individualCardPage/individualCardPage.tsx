@@ -1,15 +1,35 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { initialCountries } from "../countriylist";
 import styles from "./individualCardPage.module.css";
+import axios from "axios";
+import { Country } from "../countriylist";
 
 const CardPage: React.FC = () => {
   const { lang } = useParams<{ lang: "en" | "ka" }>();
   const { id } = useParams();
 
-  const countryInfo = initialCountries.find((country) => country.id == id);
+  const [countryInfo, setCountryInfo] = useState<Country>();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  if (!countryInfo) {
+  useEffect(() => {
+    setIsLoading(true);
+    axios.get(`http://localhost:3000/countries/${id}`).then((res) => {
+      console.log(res.data);
+      setCountryInfo(res.data);
+      setIsLoading(false);
+    })
+    .catch(() => {
+      setCountryInfo(undefined);
+      setIsLoading(false);
+      console.log("country with given id can't be found")
+    });   
+  }, [id])
+  
+  if(isLoading){
+    return (
+      <div style={{ marginTop: "140px", fontSize: "2rem" }}>...Loading</div>
+    );
+  } else if(!countryInfo){
     return (
       <div style={{ marginTop: "140px", fontSize: "2rem" }}>Not Found</div>
     );

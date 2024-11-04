@@ -1,11 +1,12 @@
-import React, { useReducer } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import styles from "./catalog.module.css";
 import ProductCard from "./productCard";
-import { Country, initialCountries } from "@/components/countriylist";
+import { Country } from "@/components/countriylist";
 import ImageComp from "./productCard/imageComp";
 import TextComp from "./productCard/textComp";
 import { useParams } from "react-router-dom";
 import { translations } from "../translations";
+import axios from "axios";
 
 type FormState = {
   countryNameEn: string;
@@ -43,10 +44,18 @@ type Action =
   | { type: "deleteCountry"; payload: { id: string } }
   | { type: "restoreCountry"; payload: { id: string } }
   | { type: "addCountry"; payload: { country: Country } }
-  | { type: "sortCountries"; payload: { order: string } };
+  | { type: "sortCountries"; payload: { order: string } }
+  | { type: "initializeCountries"; payload: Country[] }
+  | { type: "editCountry"; payload: { country: Country } };
 
 const reducer = (state: State, action: Action): State => {
   switch (action.type) {
+    case "initializeCountries":
+      return {
+        ...state,
+        countries: action.payload,
+        countryCount: action.payload.length,
+      };
     case "likeAction": {
       const updatedCountries = state.countries.map((country) =>
         country.id === action.payload.id
@@ -60,22 +69,37 @@ const reducer = (state: State, action: Action): State => {
           : updatedCountries,
       };
     }
-    case "deleteCountry": {
-      const countriesWithDeletion = state.countries.map((country) =>
-        country.id === action.payload.id
-          ? { ...country, isDeleted: true }
-          : country,
-      );
-      const activeCountries = countriesWithDeletion.filter(
-        (country) => !country.isDeleted,
-      );
-      const deletedCountries = countriesWithDeletion.filter(
-        (country) => country.isDeleted,
-      );
+    // case "deleteCountry": {
+    //   const countriesWithDeletion = state.countries.map((country) =>
+    //    {if(country.id === action.payload.id){
+    //         axios.delete(`http://localhost:3000/${country.id}`).then((response) => console.log(`Country with ID ${country.id} deleted successfully`, response.data))
+    //         return{...country, isDeleted: true}
+    //    } else{
+    //       return country;
+    //    }
+    //   } 
+    //   );
+    //   const activeCountries = countriesWithDeletion.filter(
+    //     (country) => !country.isDeleted,
+    //   );
+      // const deletedCountries = countriesWithDeletion.filter(
+      //   (country) => country.isDeleted,
+      // );
 
+      // return {
+      //   ...state,
+      //   countries: [...activeCountries /*, {...deletedCountries}*/],
+      // };
+    // }
+    case "deleteCountry": {
+      const updatedCountries = state.countries.filter(
+        (country) => country.id !== action.payload.id
+      );
+    
       return {
         ...state,
-        countries: [...activeCountries, ...deletedCountries],
+        countries: updatedCountries,
+        countryCount: state.countryCount - 1,
       };
     }
     case "restoreCountry": {
@@ -91,6 +115,17 @@ const reducer = (state: State, action: Action): State => {
       return {
         ...state,
         countries: sortedCountries,
+      };
+    }
+    case "editCountry": {
+      const updatedCountries = state.countries.map((country) =>
+        country.id === action.payload.country.id ? action.payload.country : country
+      );
+      return {
+        ...state,
+        countries: state.sortOrder
+          ? sortCountries(updatedCountries, state.sortOrder)
+          : updatedCountries,
       };
     }
     case "addCountry": {
@@ -110,6 +145,7 @@ const reducer = (state: State, action: Action): State => {
         state.countries,
         action.payload.order,
       );
+      
 
       return {
         ...state,
@@ -138,6 +174,53 @@ const sortCountries = (countries: Country[], order: string) => {
 const Catalog: React.FC = () => {
   const { lang } = useParams<{ lang: "en" | "ka" }>();
   const currentLang = lang || "en";
+  
+  const [isEditModalOpen, setEditModalOpen] = useState(false);
+  const [currentCountry, setCurrentCountry] = useState<Country | null>(null);
+  const [editFormState, setEditFormState] = useState({
+    population: "",
+    capitalCityEn: "",
+    capitalCityKa: ""
+  });
+
+  const openEditModal = (country: Country) => {
+    setCurrentCountry(country);
+    setEditFormState({
+      population: country.population.toString(),
+      capitalCityEn: country.capitalCityEn,
+      capitalCityKa: country.capitalCityKa
+    });
+    setEditModalOpen(true);
+  };
+
+  const handleEditFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setEditFormState((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleEditFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (currentCountry) {
+      const updatedCountry = {
+        ...currentCountry,
+        population: parseInt(editFormState.population),
+        capitalCityEn: editFormState.capitalCityEn,
+        capitalCityKa: editFormState.capitalCityKa,
+      };
+      handleEditCountry(updatedCountry);
+    }
+  };
+
+  useEffect(() => {
+    axios.get("http://localhost:3000/countries").then((res) => {
+      console.log(res.data);
+      dispatch({ type: "initializeCountries", payload: res.data });
+    });
+    
+  }, []);
+
+
+
 
   const formReducer = (state: FormState, action: FormAction): FormState => {
     switch (action.type) {
@@ -216,13 +299,11 @@ const Catalog: React.FC = () => {
     }
   };
 
-  const initialState: State = {
-    countries: initialCountries,
+  const [state, dispatch] = useReducer(reducer, {
+    countries: [],
     sortOrder: "",
-    countryCount: initialCountries.length,
-  };
-
-  const [state, dispatch] = useReducer(reducer, initialState);
+    countryCount: 0,
+  });
 
   const [formState, formDispatch] = useReducer(formReducer, {
     countryNameKa: "",
@@ -253,14 +334,43 @@ const Catalog: React.FC = () => {
         capitalCityKa: formState.capitalCityKa,
         imageUrl: formState.imageUrl,
         likecount: 0,
-        textEn: "",
-        textKa: "",
+        textEn: "default text",
+        textKa: "ტექსტი",
         isDeleted: false,
       };
+
+    
+      axios.post("http://localhost:3000/countries", newCountry).then((res) => {console.log(res.data)});
 
       dispatch({ type: "addCountry", payload: { country: newCountry } });
       formDispatch({ type: "ResetForm" });
     }
+  };
+
+  const handleEditCountry = (updatedCountry: Country) => {
+    axios
+      .put(`http://localhost:3000/countries/${updatedCountry.id}`, updatedCountry)
+      .then((response) => {
+        console.log(`Country with ID ${updatedCountry.id} updated successfully`, response.data);
+        dispatch({ type: "editCountry", payload: { country: response.data } });
+        setEditModalOpen(false);
+      })
+      .catch((error) => {
+        console.error(`Error updating country with ID ${updatedCountry.id}:`, error);
+      });
+  };
+
+  const handleDeleteCountry = (id: string) => {
+    axios
+      .delete(`http://localhost:3000/countries/${id}`)
+      .then((response) => {
+        console.log(`Country with ID ${id} deleted successfully`, response.data);
+        // Dispatch an action to update the state
+        dispatch({ type: "deleteCountry", payload: { id } });
+      })
+      .catch((error) => {
+        console.error(`Error deleting country with ID ${id}:`, error);
+      });
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -429,18 +539,13 @@ const Catalog: React.FC = () => {
                     {country.likecount}
                   </button>
                   <button
-                    onClick={() =>
-                      dispatch({
-                        type: "deleteCountry",
-                        payload: { id: country.id },
-                      })
-                    }
+                    onClick={() => handleDeleteCountry(country.id)}
                   >
                     {translations[currentLang].services.card.delete}
                   </button>
                 </>
               )}
-              {country.isDeleted && (
+              {/* {country.isDeleted && (
                 <button
                   onClick={() =>
                     dispatch({
@@ -451,11 +556,51 @@ const Catalog: React.FC = () => {
                 >
                   {translations[currentLang].services.card.restore}
                 </button>
-              )}
+              )} */}
+              <button onClick={() => openEditModal(country)}>Edit</button>
             </div>
           </ProductCard>
         ))}
       </div>
+
+      {isEditModalOpen && (
+        <div className={styles.editDiv}>
+          <h2>{translations[currentLang].services.card.edit}</h2>
+          <form onSubmit={handleEditFormSubmit}>
+            <label>
+              {translations[currentLang].services.from.population}
+              <input
+                type="text"
+                name="population"
+                value={editFormState.population}
+                onChange={handleEditFormChange}
+              />
+            </label>
+            <label>
+              {translations[currentLang].services.from.capcityEn}
+              <input
+                type="text"
+                name="capitalCityEn"
+                value={editFormState.capitalCityEn}
+                onChange={handleEditFormChange}
+              />
+            </label>
+            <label>
+              {translations[currentLang].services.from.capcityKa}
+              <input
+                type="text"
+                name="capitalCityKa"
+                value={editFormState.capitalCityKa}
+                onChange={handleEditFormChange}
+              />
+            </label>
+            <button type="submit">{translations[currentLang].services.from.editButton}</button>
+            <button type="button" onClick={() => setEditModalOpen(false)}>
+              {translations[currentLang].services.from.cancel}
+            </button>
+          </form>
+        </div>
+      )}
     </>
   );
 };

@@ -64,6 +64,8 @@ export const translations = {
           capitalcityerr: "Capital city must be at least 3 characters",
         },
         languagechangebutton: "change to georgian form",
+        cancel: "cancel",
+        editButton: "Edit Country",
       },
       card: {
         like: "like",
@@ -73,6 +75,7 @@ export const translations = {
           million: "Million",
         },
         seemore: "see more",
+        edit: "edit",
       },
     },
     // Add other components here as necessary...
@@ -140,6 +143,8 @@ export const translations = {
           capitalcityerr: "დედაქალაქი უნდა შედგებოდეს მინიმუმ 3 სიმბოლოსგან",
         },
         languagechangebutton: "გადაცვალე ინგლისურ ფორმაზე",
+        cancel: "გაუქმება",
+        editButton: "ქვეყნის რედაქტირება",
       },
 
       card: {
@@ -150,6 +155,7 @@ export const translations = {
           million: "მილიონი",
         },
         seemore: "ვრცლად",
+        edit: "რედაქტირება",
       },
     },
   },
