@@ -13,23 +13,25 @@ const CardPage: React.FC = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    axios.get(`http://localhost:3000/countries/${id}`).then((res) => {
-      console.log(res.data);
-      setCountryInfo(res.data);
-      setIsLoading(false);
-    })
-    .catch(() => {
-      setCountryInfo(undefined);
-      setIsLoading(false);
-      console.log("country with given id can't be found")
-    });   
-  }, [id])
-  
-  if(isLoading){
+    axios
+      .get(`http://localhost:3000/countries/${id}`)
+      .then((res) => {
+        console.log(res.data);
+        setCountryInfo(res.data);
+        setIsLoading(false);
+      })
+      .catch(() => {
+        setCountryInfo(undefined);
+        setIsLoading(false);
+        console.log("country with given id can't be found");
+      });
+  }, [id]);
+
+  if (isLoading) {
     return (
       <div style={{ marginTop: "140px", fontSize: "2rem" }}>...Loading</div>
     );
-  } else if(!countryInfo){
+  } else if (!countryInfo) {
     return (
       <div style={{ marginTop: "140px", fontSize: "2rem" }}>Not Found</div>
     );

@@ -77,25 +77,25 @@ const reducer = (state: State, action: Action): State => {
     //    } else{
     //       return country;
     //    }
-    //   } 
+    //   }
     //   );
     //   const activeCountries = countriesWithDeletion.filter(
     //     (country) => !country.isDeleted,
     //   );
-      // const deletedCountries = countriesWithDeletion.filter(
-      //   (country) => country.isDeleted,
-      // );
+    // const deletedCountries = countriesWithDeletion.filter(
+    //   (country) => country.isDeleted,
+    // );
 
-      // return {
-      //   ...state,
-      //   countries: [...activeCountries /*, {...deletedCountries}*/],
-      // };
+    // return {
+    //   ...state,
+    //   countries: [...activeCountries /*, {...deletedCountries}*/],
+    // };
     // }
     case "deleteCountry": {
       const updatedCountries = state.countries.filter(
-        (country) => country.id !== action.payload.id
+        (country) => country.id !== action.payload.id,
       );
-    
+
       return {
         ...state,
         countries: updatedCountries,
@@ -119,7 +119,9 @@ const reducer = (state: State, action: Action): State => {
     }
     case "editCountry": {
       const updatedCountries = state.countries.map((country) =>
-        country.id === action.payload.country.id ? action.payload.country : country
+        country.id === action.payload.country.id
+          ? action.payload.country
+          : country,
       );
       return {
         ...state,
@@ -145,7 +147,6 @@ const reducer = (state: State, action: Action): State => {
         state.countries,
         action.payload.order,
       );
-      
 
       return {
         ...state,
@@ -174,13 +175,13 @@ const sortCountries = (countries: Country[], order: string) => {
 const Catalog: React.FC = () => {
   const { lang } = useParams<{ lang: "en" | "ka" }>();
   const currentLang = lang || "en";
-  
+
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [currentCountry, setCurrentCountry] = useState<Country | null>(null);
   const [editFormState, setEditFormState] = useState({
     population: "",
     capitalCityEn: "",
-    capitalCityKa: ""
+    capitalCityKa: "",
   });
 
   const openEditModal = (country: Country) => {
@@ -188,7 +189,7 @@ const Catalog: React.FC = () => {
     setEditFormState({
       population: country.population.toString(),
       capitalCityEn: country.capitalCityEn,
-      capitalCityKa: country.capitalCityKa
+      capitalCityKa: country.capitalCityKa,
     });
     setEditModalOpen(true);
   };
@@ -216,11 +217,7 @@ const Catalog: React.FC = () => {
       console.log(res.data);
       dispatch({ type: "initializeCountries", payload: res.data });
     });
-    
   }, []);
-
-
-
 
   const formReducer = (state: FormState, action: FormAction): FormState => {
     switch (action.type) {
@@ -339,8 +336,9 @@ const Catalog: React.FC = () => {
         isDeleted: false,
       };
 
-    
-      axios.post("http://localhost:3000/countries", newCountry).then((res) => {console.log(res.data)});
+      axios.post("http://localhost:3000/countries", newCountry).then((res) => {
+        console.log(res.data);
+      });
 
       dispatch({ type: "addCountry", payload: { country: newCountry } });
       formDispatch({ type: "ResetForm" });
@@ -349,14 +347,23 @@ const Catalog: React.FC = () => {
 
   const handleEditCountry = (updatedCountry: Country) => {
     axios
-      .put(`http://localhost:3000/countries/${updatedCountry.id}`, updatedCountry)
+      .put(
+        `http://localhost:3000/countries/${updatedCountry.id}`,
+        updatedCountry,
+      )
       .then((response) => {
-        console.log(`Country with ID ${updatedCountry.id} updated successfully`, response.data);
+        console.log(
+          `Country with ID ${updatedCountry.id} updated successfully`,
+          response.data,
+        );
         dispatch({ type: "editCountry", payload: { country: response.data } });
         setEditModalOpen(false);
       })
       .catch((error) => {
-        console.error(`Error updating country with ID ${updatedCountry.id}:`, error);
+        console.error(
+          `Error updating country with ID ${updatedCountry.id}:`,
+          error,
+        );
       });
   };
 
@@ -364,7 +371,10 @@ const Catalog: React.FC = () => {
     axios
       .delete(`http://localhost:3000/countries/${id}`)
       .then((response) => {
-        console.log(`Country with ID ${id} deleted successfully`, response.data);
+        console.log(
+          `Country with ID ${id} deleted successfully`,
+          response.data,
+        );
         // Dispatch an action to update the state
         dispatch({ type: "deleteCountry", payload: { id } });
       })
@@ -538,9 +548,7 @@ const Catalog: React.FC = () => {
                     {translations[currentLang].services.card.like}{" "}
                     {country.likecount}
                   </button>
-                  <button
-                    onClick={() => handleDeleteCountry(country.id)}
-                  >
+                  <button onClick={() => handleDeleteCountry(country.id)}>
                     {translations[currentLang].services.card.delete}
                   </button>
                 </>
@@ -594,7 +602,9 @@ const Catalog: React.FC = () => {
                 onChange={handleEditFormChange}
               />
             </label>
-            <button type="submit">{translations[currentLang].services.from.editButton}</button>
+            <button type="submit">
+              {translations[currentLang].services.from.editButton}
+            </button>
             <button type="button" onClick={() => setEditModalOpen(false)}>
               {translations[currentLang].services.from.cancel}
             </button>
