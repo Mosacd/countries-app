@@ -37,18 +37,17 @@ export type FormAction =
   | { type: "SetImageBase64"; payload: string }
   | { type: "ResetForm" };
 
+export type State = {
+  countries: Country[];
+  sortOrder: string;
+  countryCount: number;
+};
 
-  export type State = {
-    countries: Country[];
-    sortOrder: string;
-    countryCount: number;
-  };
-  
-  export type Action =
-    | { type: "likeAction"; payload: { id: string } }
-    | { type: "deleteCountry"; payload: { id: string } }
-    | { type: "restoreCountry"; payload: { id: string } }
-    | { type: "addCountry"; payload: { country: Country } }
-    | { type: "sortCountries"; payload: { order: string } }
-    | { type: "initializeCountries"; payload: Country[] }
-    | { type: "editCountry"; payload: { country: Country } };
+export type Action =
+  | { type: "likeAction"; payload: { id: string } }
+  | { type: "deleteCountry"; payload: { id: string } }
+  | { type: "restoreCountry"; payload: { id: string } }
+  | { type: "addCountry"; payload: { country: Country } }
+  | { type: "sortCountries"; payload: { order: string } }
+  | { type: "initializeCountries"; payload: Country[] }
+  | { type: "editCountry"; payload: { country: Country } };

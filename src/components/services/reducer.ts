@@ -1,5 +1,11 @@
 // reducers.ts
-import { State, Action, FormState, FormAction, Country } from "@/components/typesForCatalog";
+import {
+  State,
+  Action,
+  FormState,
+  FormAction,
+  Country,
+} from "@/components/typesForCatalog";
 import { translations } from "../translations";
 
 const sortCountries = (countries: Country[], order: string) => {
@@ -23,7 +29,7 @@ export const catalogReducer = (state: State, action: Action): State => {
         countries: action.payload,
         countryCount: action.payload.length,
       };
-      
+
     case "likeAction": {
       const updatedCountries = state.countries.map((country) =>
         country.id === action.payload.id
@@ -111,7 +117,11 @@ export const catalogReducer = (state: State, action: Action): State => {
   }
 };
 
-export const formReducer = (state: FormState, action: FormAction, currentLang: "en"| "ka"): FormState => {
+export const formReducer = (
+  state: FormState,
+  action: FormAction,
+  currentLang: "en" | "ka",
+): FormState => {
   switch (action.type) {
     case "SetCountryNameEn": {
       const error =

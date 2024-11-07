@@ -1,16 +1,24 @@
 import React, { useReducer, useState } from "react";
 import styles from "./catalog.module.css";
 import ProductCard from "./productCard";
-import { Country, FormState, FormAction} from "@/components/typesForCatalog"; // all type imports
+import { Country, FormState, FormAction } from "@/components/typesForCatalog"; // all type imports
 import ImageComp from "./productCard/imageComp";
 import TextComp from "./productCard/textComp";
 import { useParams } from "react-router-dom";
 import { translations } from "../translations";
-import { fetchCountries, addCountry, editCountry, deleteCountry } from "@/API/requests";
+import {
+  fetchCountries,
+  addCountry,
+  editCountry,
+  deleteCountry,
+} from "@/API/requests";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { catalogReducer, formReducer, initialCatalogState, initialFormState } from './reducer';
-
-
+import {
+  catalogReducer,
+  formReducer,
+  initialCatalogState,
+  initialFormState,
+} from "./reducer";
 
 const Catalog: React.FC = () => {
   const { lang } = useParams<{ lang: "en" | "ka" }>();
@@ -64,13 +72,12 @@ const Catalog: React.FC = () => {
     },
   });
 
- 
-  const [state, dispatch] = useReducer(catalogReducer, initialCatalogState)
-
+  const [state, dispatch] = useReducer(catalogReducer, initialCatalogState);
 
   const [formState, formDispatch] = useReducer(
-    (state: FormState, action: FormAction) => formReducer(state, action, currentLang),
-    initialFormState
+    (state: FormState, action: FormAction) =>
+      formReducer(state, action, currentLang),
+    initialFormState,
   );
 
   // useMutation for adding a country
@@ -79,10 +86,8 @@ const Catalog: React.FC = () => {
     onSuccess: (newCountry) => {
       queryClient.invalidateQueries({ queryKey: ["countries"] });
       dispatch({ type: "addCountry", payload: { country: newCountry } });
-      
     },
   });
-
 
   const editCountryMutation = useMutation({
     mutationFn: editCountry,
@@ -93,7 +98,6 @@ const Catalog: React.FC = () => {
     },
   });
 
-
   const deleteCountryMutation = useMutation({
     mutationFn: deleteCountry,
     onSuccess: (_, id) => {
@@ -102,35 +106,32 @@ const Catalog: React.FC = () => {
     },
   });
 
+  const handleAddCountry = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (isFormValid) {
+      const newCountry: Country = {
+        id: (state.countryCount + 1).toString(),
+        nameEn: formState.countryNameEn,
+        nameKa: formState.countryNameKa,
+        population: parseInt(formState.population),
+        capitalCityEn: formState.capitalCityEn,
+        capitalCityKa: formState.capitalCityKa,
+        imageUrl: formState.imageUrl,
+        likecount: 0,
+        textEn: "default text",
+        textKa: "ტექსტი",
+        isDeleted: false,
+      };
+      addCountryMutation.mutate(newCountry);
+      formDispatch({ type: "ResetForm" });
+    }
+  };
 
+  const handleEditCountry = (updatedCountry: Country) => {
+    editCountryMutation.mutate(updatedCountry);
+  };
 
-const handleAddCountry = (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-  if (isFormValid) {
-    const newCountry: Country = {
-      id: (state.countryCount + 1).toString(),
-      nameEn: formState.countryNameEn,
-      nameKa: formState.countryNameKa,
-      population: parseInt(formState.population),
-      capitalCityEn: formState.capitalCityEn,
-      capitalCityKa: formState.capitalCityKa,
-      imageUrl: formState.imageUrl,
-      likecount: 0,
-      textEn: "default text",
-      textKa: "ტექსტი",
-      isDeleted: false,
-    };
-    addCountryMutation.mutate(newCountry);
-    formDispatch({ type: "ResetForm" });
-  }
-};
-
-
-const handleEditCountry = (updatedCountry: Country) => {
-  editCountryMutation.mutate(updatedCountry);
-};
-
-const handleDeleteCountry = (id: string) => {
+  const handleDeleteCountry = (id: string) => {
     deleteCountryMutation.mutate(id);
   };
 
@@ -163,8 +164,8 @@ const handleDeleteCountry = (id: string) => {
     Number(formState.population) > 0 &&
     formState.imageFile !== null;
 
-    if (isLoading) return <h1>Loading countries...</h1>;
-    if(error) return <h1>Error while fetching countries</h1>
+  if (isLoading) return <h1>Loading countries...</h1>;
+  if (error) return <h1>Error while fetching countries</h1>;
 
   return (
     <>
