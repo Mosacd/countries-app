@@ -1,176 +1,16 @@
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useReducer, useState } from "react";
 import styles from "./catalog.module.css";
 import ProductCard from "./productCard";
-import { Country } from "@/components/countriylist";
+import { Country, FormState, FormAction} from "@/components/typesForCatalog"; // all type imports
 import ImageComp from "./productCard/imageComp";
 import TextComp from "./productCard/textComp";
 import { useParams } from "react-router-dom";
 import { translations } from "../translations";
-import axios from "axios";
+import { fetchCountries, addCountry, editCountry, deleteCountry } from "@/API/requests";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { catalogReducer, formReducer, initialCatalogState, initialFormState } from './reducer';
 
-type FormState = {
-  countryNameEn: string;
-  countryNameKa: string;
-  population: string;
-  capitalCityEn: string;
-  capitalCityKa: string;
-  imageUrl: string;
-  imageFile: File | null;
-  errors: {
-    countryName: string;
-    population: string;
-    capitalCity: string;
-  };
-};
 
-type FormAction =
-  | { type: "SetCountryNameEn"; payload: string }
-  | { type: "SetCountryNameKa"; payload: string }
-  | { type: "SetPopulation"; payload: string }
-  | { type: "SetCapitalCityEn"; payload: string }
-  | { type: "SetCapitalCityKa"; payload: string }
-  | { type: "SetImageFile"; payload: File | null }
-  | { type: "SetImageBase64"; payload: string }
-  | { type: "ResetForm" };
-
-type State = {
-  countries: Country[];
-  sortOrder: string;
-  countryCount: number;
-};
-
-type Action =
-  | { type: "likeAction"; payload: { id: string } }
-  | { type: "deleteCountry"; payload: { id: string } }
-  | { type: "restoreCountry"; payload: { id: string } }
-  | { type: "addCountry"; payload: { country: Country } }
-  | { type: "sortCountries"; payload: { order: string } }
-  | { type: "initializeCountries"; payload: Country[] }
-  | { type: "editCountry"; payload: { country: Country } };
-
-const reducer = (state: State, action: Action): State => {
-  switch (action.type) {
-    case "initializeCountries":
-      return {
-        ...state,
-        countries: action.payload,
-        countryCount: action.payload.length,
-      };
-    case "likeAction": {
-      const updatedCountries = state.countries.map((country) =>
-        country.id === action.payload.id
-          ? { ...country, likecount: country.likecount + 1 }
-          : country,
-      );
-      return {
-        ...state,
-        countries: state.sortOrder
-          ? sortCountries(updatedCountries, state.sortOrder)
-          : updatedCountries,
-      };
-    }
-    // case "deleteCountry": {
-    //   const countriesWithDeletion = state.countries.map((country) =>
-    //    {if(country.id === action.payload.id){
-    //         axios.delete(`http://localhost:3000/${country.id}`).then((response) => console.log(`Country with ID ${country.id} deleted successfully`, response.data))
-    //         return{...country, isDeleted: true}
-    //    } else{
-    //       return country;
-    //    }
-    //   }
-    //   );
-    //   const activeCountries = countriesWithDeletion.filter(
-    //     (country) => !country.isDeleted,
-    //   );
-    // const deletedCountries = countriesWithDeletion.filter(
-    //   (country) => country.isDeleted,
-    // );
-
-    // return {
-    //   ...state,
-    //   countries: [...activeCountries /*, {...deletedCountries}*/],
-    // };
-    // }
-    case "deleteCountry": {
-      const updatedCountries = state.countries.filter(
-        (country) => country.id !== action.payload.id,
-      );
-
-      return {
-        ...state,
-        countries: updatedCountries,
-        countryCount: state.countryCount - 1,
-      };
-    }
-    case "restoreCountry": {
-      const restoredCountries = state.countries.map((country) =>
-        country.id === action.payload.id
-          ? { ...country, isDeleted: false }
-          : country,
-      );
-      const sortedCountries = state.sortOrder
-        ? sortCountries(restoredCountries, state.sortOrder)
-        : restoredCountries;
-
-      return {
-        ...state,
-        countries: sortedCountries,
-      };
-    }
-    case "editCountry": {
-      const updatedCountries = state.countries.map((country) =>
-        country.id === action.payload.country.id
-          ? action.payload.country
-          : country,
-      );
-      return {
-        ...state,
-        countries: state.sortOrder
-          ? sortCountries(updatedCountries, state.sortOrder)
-          : updatedCountries,
-      };
-    }
-    case "addCountry": {
-      const updatedCountries = [...state.countries, action.payload.country];
-      const sortedCountries = state.sortOrder
-        ? sortCountries(updatedCountries, state.sortOrder)
-        : updatedCountries;
-
-      return {
-        ...state,
-        countries: sortedCountries,
-        countryCount: state.countryCount + 1,
-      };
-    }
-    case "sortCountries": {
-      const sortedCountries = sortCountries(
-        state.countries,
-        action.payload.order,
-      );
-
-      return {
-        ...state,
-        sortOrder: action.payload.order,
-        countries: sortedCountries,
-      };
-    }
-    default:
-      return state;
-  }
-};
-
-const sortCountries = (countries: Country[], order: string) => {
-  const activeCountries = countries.filter((country) => !country.isDeleted);
-  const deletedCountries = countries.filter((country) => country.isDeleted);
-
-  if (order === "asc") {
-    activeCountries.sort((a, b) => a.likecount - b.likecount);
-  } else if (order === "desc") {
-    activeCountries.sort((a, b) => b.likecount - a.likecount);
-  }
-
-  return [...activeCountries, ...deletedCountries];
-};
 
 const Catalog: React.FC = () => {
   const { lang } = useParams<{ lang: "en" | "ka" }>();
@@ -212,175 +52,86 @@ const Catalog: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    axios.get("http://localhost:3000/countries").then((res) => {
-      console.log(res.data);
-      dispatch({ type: "initializeCountries", payload: res.data });
-    });
-  }, []);
+  const queryClient = useQueryClient();
 
-  const formReducer = (state: FormState, action: FormAction): FormState => {
-    switch (action.type) {
-      case "SetCountryNameEn": {
-        const error =
-          action.payload.length < 3
-            ? translations[currentLang].services.from.errors.nameerr
-            : "";
-        return {
-          ...state,
-          countryNameEn: action.payload,
-          errors: { ...state.errors, countryName: error },
-        };
-      }
-      case "SetCountryNameKa": {
-        const error =
-          action.payload.length < 3
-            ? translations[currentLang].services.from.errors.nameerr
-            : "";
-        return {
-          ...state,
-          countryNameKa: action.payload,
-          errors: { ...state.errors, countryName: error },
-        };
-      }
-      case "SetPopulation": {
-        const error =
-          isNaN(Number(action.payload)) || Number(action.payload) <= 0
-            ? translations[currentLang].services.from.errors.populationerr
-            : "";
-        return {
-          ...state,
-          population: action.payload,
-          errors: { ...state.errors, population: error },
-        };
-      }
-      case "SetCapitalCityEn": {
-        const error =
-          action.payload.length < 3
-            ? translations[currentLang].services.from.errors.capitalcityerr
-            : "";
-        return {
-          ...state,
-          capitalCityEn: action.payload,
-          errors: { ...state.errors, capitalCity: error },
-        };
-      }
-      case "SetCapitalCityKa": {
-        const error =
-          action.payload.length < 3
-            ? translations[currentLang].services.from.errors.capitalcityerr
-            : "";
-        return {
-          ...state,
-          capitalCityKa: action.payload,
-          errors: { ...state.errors, capitalCity: error },
-        };
-      }
-      case "SetImageFile":
-        return { ...state, imageFile: action.payload };
-      case "SetImageBase64":
-        return { ...state, imageUrl: action.payload };
-      case "ResetForm":
-        return {
-          countryNameEn: "",
-          countryNameKa: "",
-          population: "",
-          capitalCityEn: "",
-          capitalCityKa: "",
-          imageUrl: "",
-          imageFile: null,
-          errors: { countryName: "", population: "", capitalCity: "" },
-        };
-      default:
-        return state;
-    }
-  };
-
-  const [state, dispatch] = useReducer(reducer, {
-    countries: [],
-    sortOrder: "",
-    countryCount: 0,
+  // Fetch countries using useQuery
+  const { isLoading, error } = useQuery<Country[], Error>({
+    queryKey: ["countries"],
+    queryFn: async () => {
+      const fetchedCountries: Country[] = await fetchCountries();
+      dispatch({ type: "initializeCountries", payload: fetchedCountries });
+      return fetchedCountries;
+    },
   });
 
-  const [formState, formDispatch] = useReducer(formReducer, {
-    countryNameKa: "",
-    countryNameEn: "",
-    population: "",
-    capitalCityKa: "",
-    capitalCityEn: "",
-    imageUrl: "",
-    imageFile: null,
-    errors: { countryName: "", population: "", capitalCity: "" },
-  });
+ 
+  const [state, dispatch] = useReducer(catalogReducer, initialCatalogState)
 
-  const handleAddCountry = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
 
-    if (
-      !formState.errors.countryName &&
-      !formState.errors.population &&
-      !formState.errors.capitalCity
-    ) {
-      const newId = (state.countryCount + 1).toString();
-      const newCountry: Country = {
-        id: newId,
-        nameEn: formState.countryNameEn,
-        nameKa: formState.capitalCityKa,
-        population: parseInt(formState.population),
-        capitalCityEn: formState.capitalCityEn,
-        capitalCityKa: formState.capitalCityKa,
-        imageUrl: formState.imageUrl,
-        likecount: 0,
-        textEn: "default text",
-        textKa: "ტექსტი",
-        isDeleted: false,
-      };
+  const [formState, formDispatch] = useReducer(
+    (state: FormState, action: FormAction) => formReducer(state, action, currentLang),
+    initialFormState
+  );
 
-      axios.post("http://localhost:3000/countries", newCountry).then((res) => {
-        console.log(res.data);
-      });
-
+  // useMutation for adding a country
+  const addCountryMutation = useMutation({
+    mutationFn: addCountry,
+    onSuccess: (newCountry) => {
+      queryClient.invalidateQueries({ queryKey: ["countries"] });
       dispatch({ type: "addCountry", payload: { country: newCountry } });
-      formDispatch({ type: "ResetForm" });
-    }
-  };
+      
+    },
+  });
 
-  const handleEditCountry = (updatedCountry: Country) => {
-    axios
-      .put(
-        `http://localhost:3000/countries/${updatedCountry.id}`,
-        updatedCountry,
-      )
-      .then((response) => {
-        console.log(
-          `Country with ID ${updatedCountry.id} updated successfully`,
-          response.data,
-        );
-        dispatch({ type: "editCountry", payload: { country: response.data } });
-        setEditModalOpen(false);
-      })
-      .catch((error) => {
-        console.error(
-          `Error updating country with ID ${updatedCountry.id}:`,
-          error,
-        );
-      });
-  };
 
-  const handleDeleteCountry = (id: string) => {
-    axios
-      .delete(`http://localhost:3000/countries/${id}`)
-      .then((response) => {
-        console.log(
-          `Country with ID ${id} deleted successfully`,
-          response.data,
-        );
-        // Dispatch an action to update the state
-        dispatch({ type: "deleteCountry", payload: { id } });
-      })
-      .catch((error) => {
-        console.error(`Error deleting country with ID ${id}:`, error);
-      });
+  const editCountryMutation = useMutation({
+    mutationFn: editCountry,
+    onSuccess: (currentCountry) => {
+      queryClient.invalidateQueries({ queryKey: ["countries"] });
+      dispatch({ type: "editCountry", payload: { country: currentCountry } });
+      setCurrentCountry(null);
+    },
+  });
+
+
+  const deleteCountryMutation = useMutation({
+    mutationFn: deleteCountry,
+    onSuccess: (_, id) => {
+      queryClient.invalidateQueries({ queryKey: ["countries"] });
+      dispatch({ type: "deleteCountry", payload: { id } });
+    },
+  });
+
+
+
+const handleAddCountry = (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+  if (isFormValid) {
+    const newCountry: Country = {
+      id: (state.countryCount + 1).toString(),
+      nameEn: formState.countryNameEn,
+      nameKa: formState.countryNameKa,
+      population: parseInt(formState.population),
+      capitalCityEn: formState.capitalCityEn,
+      capitalCityKa: formState.capitalCityKa,
+      imageUrl: formState.imageUrl,
+      likecount: 0,
+      textEn: "default text",
+      textKa: "ტექსტი",
+      isDeleted: false,
+    };
+    addCountryMutation.mutate(newCountry);
+    formDispatch({ type: "ResetForm" });
+  }
+};
+
+
+const handleEditCountry = (updatedCountry: Country) => {
+  editCountryMutation.mutate(updatedCountry);
+};
+
+const handleDeleteCountry = (id: string) => {
+    deleteCountryMutation.mutate(id);
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -411,6 +162,9 @@ const Catalog: React.FC = () => {
     formState.capitalCityKa.length > 2 &&
     Number(formState.population) > 0 &&
     formState.imageFile !== null;
+
+    if (isLoading) return <h1>Loading countries...</h1>;
+    if(error) return <h1>Error while fetching countries</h1>
 
   return (
     <>

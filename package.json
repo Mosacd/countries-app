@@ -15,6 +15,7 @@
     "seed-db": "node seed.js"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.59.20",
     "axios": "^1.7.7",
     "json-server": "^1.0.0-beta.3",
     "react": "^18.3.1",

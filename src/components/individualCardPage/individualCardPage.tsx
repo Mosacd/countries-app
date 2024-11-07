@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import styles from "./individualCardPage.module.css";
 import axios from "axios";
-import { Country } from "../countriylist";
+import { Country } from "../typesForCatalog";
 
 const CardPage: React.FC = () => {
   const { lang } = useParams<{ lang: "en" | "ka" }>();
