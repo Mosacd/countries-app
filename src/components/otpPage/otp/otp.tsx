@@ -5,7 +5,7 @@ import React, {
   KeyboardEvent,
   ClipboardEvent,
 } from "react";
-import styles from "./Otp.module.css";
+import styles from "./otp.module.css";
 
 const Otp: React.FC<{ length: number }> = ({ length }) => {
   const [inputs, setInputs] = useState(Array(length).fill(""));
