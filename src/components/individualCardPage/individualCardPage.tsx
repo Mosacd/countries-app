@@ -10,7 +10,6 @@ const CardPage: React.FC = () => {
   const { id } = useParams();
 
   const [countryInfo, setCountryInfo] = useState<Country>();
-  
 
   // useEffect(() => {
   //   setIsLoading(true);
@@ -37,18 +36,17 @@ const CardPage: React.FC = () => {
       throw error;
     }
   };
-  
 
- const {isLoading} = useQuery({
-  queryKey: ["single-country"],
-  queryFn: async () => {
-    const fetchedCountry: Country = await fetchSingleCountry();
-    setCountryInfo(fetchedCountry);
-    return fetchedCountry
-  },
+  const { isLoading } = useQuery({
+    queryKey: ["single-country"],
+    queryFn: async () => {
+      const fetchedCountry: Country = await fetchSingleCountry();
+      setCountryInfo(fetchedCountry);
+      return fetchedCountry;
+    },
   });
 
-console.log(isLoading);
+  console.log(isLoading);
 
   if (isLoading) {
     return (

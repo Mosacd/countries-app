@@ -19,13 +19,11 @@ import {
   initialCatalogState,
   initialFormState,
 } from "./reducer";
-import { useVirtualizer } from '@tanstack/react-virtual';
+import { useVirtualizer } from "@tanstack/react-virtual";
 import { useSearchParams } from "react-router-dom";
 import { sortCountries } from "./reducer";
 
 const Catalog: React.FC = () => {
-
-  
   const { lang } = useParams<{ lang: "en" | "ka" }>();
   const currentLang = lang || "en";
 
@@ -37,7 +35,6 @@ const Catalog: React.FC = () => {
     capitalCityKa: "",
   });
 
-  
   const openEditModal = (country: Country) => {
     setCurrentCountry(country);
     setEditFormState({
@@ -68,16 +65,20 @@ const Catalog: React.FC = () => {
 
   const queryClient = useQueryClient();
 
-    // SearchParams for storing the sort order in URL
-const [searchParams, setSearchParams] = useSearchParams();
+  // SearchParams for storing the sort order in URL
+  const [searchParams, setSearchParams] = useSearchParams();
 
-// Retrieve the initial sort order from searchParams or set a default
-const initialSortOrder = searchParams.get("sort") || "";
+  // Retrieve the initial sort order from searchParams or set a default
+  const initialSortOrder = searchParams.get("sort") || "";
 
   // Fetch countries using useQuery
   // Fetch countries with React Query
-  const { data: countries = [], isLoading, error } = useQuery<Country[], Error>({
-    queryKey: ["countries", initialSortOrder],  // Include initialSortOrder in the query key to trigger refetch
+  const {
+    data: countries = [],
+    isLoading,
+    error,
+  } = useQuery<Country[], Error>({
+    queryKey: ["countries", initialSortOrder], // Include initialSortOrder in the query key to trigger refetch
     queryFn: async () => {
       const fetchedCountries: Country[] = await fetchCountries();
       const sortedCountries = sortCountries(fetchedCountries, initialSortOrder); // Apply initial sort order
@@ -88,13 +89,8 @@ const initialSortOrder = searchParams.get("sort") || "";
 
   const [state, dispatch] = useReducer(catalogReducer, initialCatalogState);
 
-
-
-
-
-
-// Handle sorting change to update URL and sort list in state
-const handleSortChange = (order: string) => {
+  // Handle sorting change to update URL and sort list in state
+  const handleSortChange = (order: string) => {
     setSearchParams({ sort: order });
   };
 
@@ -104,7 +100,6 @@ const handleSortChange = (order: string) => {
       dispatch({ type: "initializeCountries", payload: sortedCountries });
     }
   }, [countries, initialSortOrder]); // Re-run effect on countries or sort order change
-
 
   const parentRef = useRef<HTMLDivElement>(null);
   const virtualizer = useVirtualizer({
@@ -207,8 +202,6 @@ const handleSortChange = (order: string) => {
   if (isLoading) return <h1>Loading countries...</h1>;
   if (error) return <h1>Error while fetching countries</h1>;
 
-
-  
   return (
     <>
       <h1 className={styles.catalog}>
@@ -220,11 +213,10 @@ const handleSortChange = (order: string) => {
           {translations[currentLang].services.sort.text}
         </label>
         <select
-  id="sort"
-  value={searchParams.get("sort") || ""}
-  onChange={(e) => handleSortChange(e.target.value)}
->
-
+          id="sort"
+          value={searchParams.get("sort") || ""}
+          onChange={(e) => handleSortChange(e.target.value)}
+        >
           <option value="">
             {translations[currentLang].services.sort.select}
           </option>
@@ -309,22 +301,20 @@ const handleSortChange = (order: string) => {
         )}
       </form>
 
-
-
       <div
-        ref={parentRef} 
-        className={styles.catalogContent} 
+        ref={parentRef}
+        className={styles.catalogContent}
         style={{
-          height: '400px',     // Adjust based on your layout
-          overflow: 'auto',    // Enables scroll
-          display:'flex',
+          height: "400px", // Adjust based on your layout
+          overflow: "auto", // Enables scroll
+          display: "flex",
         }}
       >
         <div
           style={{
             height: `${virtualizer.getTotalSize()}px`,
-            width: '100%',
-            position: 'relative',
+            width: "100%",
+            position: "relative",
           }}
         >
           {virtualizer.getVirtualItems().map((virtualRow) => {
@@ -333,23 +323,27 @@ const handleSortChange = (order: string) => {
               <div
                 key={country.id}
                 style={{
-                  position: 'absolute',
+                  position: "absolute",
                   top: 0,
                   left: 0,
-                  width: '100%',
-                  
+                  width: "100%",
+
                   transform: `translateY(${virtualRow.start}px)`,
                 }}
               >
                 <ProductCard id={country.id}>
                   <ImageComp
                     src={country.imageUrl}
-                    alt={`Flag of ${lang === 'en' ? country.nameEn : country.nameKa}`}
+                    alt={`Flag of ${lang === "en" ? country.nameEn : country.nameKa}`}
                   />
                   <TextComp
-                    name={lang === 'en' ? country.nameEn : country.nameKa}
+                    name={lang === "en" ? country.nameEn : country.nameKa}
                     population={country.population}
-                    capitalCity={lang === 'en' ? country.capitalCityEn : country.capitalCityKa}
+                    capitalCity={
+                      lang === "en"
+                        ? country.capitalCityEn
+                        : country.capitalCityKa
+                    }
                   />
                   <div className={styles.bottom}>
                     {!country.isDeleted && (
@@ -357,12 +351,13 @@ const handleSortChange = (order: string) => {
                         <button
                           onClick={() =>
                             dispatch({
-                              type: 'likeAction',
+                              type: "likeAction",
                               payload: { id: country.id },
                             })
                           }
                         >
-                          {translations[currentLang].services.card.like} {country.likecount}
+                          {translations[currentLang].services.card.like}{" "}
+                          {country.likecount}
                         </button>
                         <button onClick={() => handleDeleteCountry(country.id)}>
                           {translations[currentLang].services.card.delete}
