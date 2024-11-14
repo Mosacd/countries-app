@@ -2,15 +2,19 @@ import { httpClient } from "..";
 import { Country } from "@/components/typesForCatalog";
 
 // Fetch all countries
-export const fetchCountries = async (): Promise<Country[]> => {
+export const fetchCountries = async (sortOrder: string = ""): Promise<Country[]> => {
   try {
-    const response = await httpClient.get<Country[]>("/countries");
+    const response = await httpClient.get<Country[]>("/countries", {
+      params: { _sort: sortOrder },});
     return response.data;
   } catch (error) {
     console.error("Error fetching countries:", error);
     throw error;
   }
 };
+
+
+
 
 // Add a new country
 export const addCountry = async (country: Country): Promise<Country> => {

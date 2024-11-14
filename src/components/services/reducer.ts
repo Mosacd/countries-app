@@ -8,7 +8,7 @@ import {
 } from "@/components/typesForCatalog";
 import { translations } from "../translations";
 
-const sortCountries = (countries: Country[], order: string) => {
+export const sortCountries = (countries: Country[], order: string) => {
   const activeCountries = countries.filter((country) => !country.isDeleted);
   const deletedCountries = countries.filter((country) => country.isDeleted);
 
@@ -44,33 +44,33 @@ export const catalogReducer = (state: State, action: Action): State => {
       };
     }
 
-    case "deleteCountry": {
-      const updatedCountries = state.countries.filter(
-        (country) => country.id !== action.payload.id,
-      );
+    // case "deleteCountry": {
+    //   const updatedCountries = state.countries.filter(
+    //     (country) => country.id !== action.payload.id,
+    //   );
 
-      return {
-        ...state,
-        countries: updatedCountries,
-        countryCount: state.countryCount - 1,
-      };
-    }
+    //   return {
+    //     ...state,
+    //     countries: updatedCountries,
+    //     countryCount: state.countryCount - 1,
+    //   };
+    // }
 
-    case "restoreCountry": {
-      const restoredCountries = state.countries.map((country) =>
-        country.id === action.payload.id
-          ? { ...country, isDeleted: false }
-          : country,
-      );
-      const sortedCountries = state.sortOrder
-        ? sortCountries(restoredCountries, state.sortOrder)
-        : restoredCountries;
+    // case "restoreCountry": {
+    //   const restoredCountries = state.countries.map((country) =>
+    //     country.id === action.payload.id
+    //       ? { ...country, isDeleted: false }
+    //       : country,
+    //   );
+    //   const sortedCountries = state.sortOrder
+    //     ? sortCountries(restoredCountries, state.sortOrder)
+    //     : restoredCountries;
 
-      return {
-        ...state,
-        countries: sortedCountries,
-      };
-    }
+    //   return {
+    //     ...state,
+    //     countries: sortedCountries,
+    //   };
+    // }
 
     case "editCountry": {
       const updatedCountries = state.countries.map((country) =>
@@ -86,18 +86,18 @@ export const catalogReducer = (state: State, action: Action): State => {
       };
     }
 
-    case "addCountry": {
-      const updatedCountries = [...state.countries, action.payload.country];
-      const sortedCountries = state.sortOrder
-        ? sortCountries(updatedCountries, state.sortOrder)
-        : updatedCountries;
+    // case "addCountry": {
+    //   const updatedCountries = [...state.countries, action.payload.country];
+    //   const sortedCountries = state.sortOrder
+    //     ? sortCountries(updatedCountries, state.sortOrder)
+    //     : updatedCountries;
 
-      return {
-        ...state,
-        countries: sortedCountries,
-        countryCount: state.countryCount + 1,
-      };
-    }
+    //   return {
+    //     ...state,
+    //     countries: sortedCountries,
+    //     countryCount: state.countryCount + 1,
+    //   };
+    // }
 
     case "sortCountries": {
       const sortedCountries = sortCountries(
