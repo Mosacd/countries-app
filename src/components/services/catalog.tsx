@@ -199,8 +199,12 @@ const Catalog: React.FC = () => {
     Number(formState.population) > 0 &&
     formState.imageFile !== null;
 
-  if (isLoading) return <h1 style={{margin:'auto'}}>Loading countries...</h1>;
-  if (error) return <h1 style={{margin:'30px auto'}}>Error while fetching countries</h1>;
+  if (isLoading)
+    return <h1 style={{ position:"absolute", top:'200px', left:'200px', fontSize:'25px' }}>Loading countries...</h1>;
+  if (error)
+    return (
+      <h1 style={{ position:"absolute", top:'200px', left:'200px', fontSize:'25px'}}>Error while fetching countries</h1>
+    );
 
   return (
     <>
