@@ -72,32 +72,32 @@ export const catalogReducer = (state: State, action: Action): State => {
     //   };
     // }
 
-    case "editCountry": {
-      const updatedCountries = state.countries.map((country) =>
-        country.id === action.payload.country.id
-          ? action.payload.country
-          : country,
-      );
-      return {
-        ...state,
-        countries: state.sortOrder
-          ? sortCountries(updatedCountries, state.sortOrder)
-          : updatedCountries,
-      };
-    }
-
-    // case "addCountry": {
-    //   const updatedCountries = [...state.countries, action.payload.country];
-    //   const sortedCountries = state.sortOrder
-    //     ? sortCountries(updatedCountries, state.sortOrder)
-    //     : updatedCountries;
-
+    // case "editCountry": {
+    //   const updatedCountries = state.countries.map((country) =>
+    //     country.id === action.payload.country.id
+    //       ? action.payload.country
+    //       : country,
+    //   );
     //   return {
     //     ...state,
-    //     countries: sortedCountries,
-    //     countryCount: state.countryCount + 1,
+    //     countries: state.sortOrder
+    //       ? sortCountries(updatedCountries, state.sortOrder)
+    //       : updatedCountries,
     //   };
     // }
+
+     case "addCountry": {
+       const updatedCountries = [...state.countries, action.payload.country];
+       const sortedCountries = state.sortOrder
+         ? sortCountries(updatedCountries, state.sortOrder)
+         : updatedCountries;
+
+       return {
+         ...state,
+         countries: sortedCountries,
+         countryCount: state.countryCount + 1,
+       };
+     }
 
     case "sortCountries": {
       const sortedCountries = sortCountries(
