@@ -86,18 +86,18 @@ export const catalogReducer = (state: State, action: Action): State => {
     //   };
     // }
 
-     case "addCountry": {
-       const updatedCountries = [...state.countries, action.payload.country];
-       const sortedCountries = state.sortOrder
-         ? sortCountries(updatedCountries, state.sortOrder)
-         : updatedCountries;
+    case "addCountry": {
+      const updatedCountries = [...state.countries, action.payload.country];
+      const sortedCountries = state.sortOrder
+        ? sortCountries(updatedCountries, state.sortOrder)
+        : updatedCountries;
 
-       return {
-         ...state,
-         countries: sortedCountries,
-         countryCount: state.countryCount + 1,
-       };
-     }
+      return {
+        ...state,
+        countries: sortedCountries,
+        countryCount: state.countryCount + 1,
+      };
+    }
 
     case "sortCountries": {
       const sortedCountries = sortCountries(

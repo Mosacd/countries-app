@@ -6,16 +6,9 @@ import ImageComp from "./productCard/imageComp";
 import TextComp from "./productCard/textComp";
 import { useParams } from "react-router-dom";
 import { translations } from "../translations";
-import {
-  fetchCountries,
-  editCountry,
-  deleteCountry,
-} from "@/API/requests";
+import { fetchCountries, editCountry, deleteCountry } from "@/API/requests";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  catalogReducer,
-  initialCatalogState,
-} from "./reducer";
+import { catalogReducer, initialCatalogState } from "./reducer";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { useSearchParams } from "react-router-dom";
 import { sortCountries } from "./reducer";
@@ -64,7 +57,6 @@ const Catalog: React.FC = () => {
   };
 
   const queryClient = useQueryClient();
-     
 
   // SearchParams for storing the sort order in URL
   const [searchParams, setSearchParams] = useSearchParams();
@@ -72,10 +64,10 @@ const Catalog: React.FC = () => {
   // Retrieve the initial sort order from searchParams or set a default
   const initialSortOrder = searchParams.get("sort") || "";
 
-       // Handle sorting change to update URL and sort list in state
-       const handleSortChange = (order: string) => {
-        setSearchParams({ sort: order });
-      };
+  // Handle sorting change to update URL and sort list in state
+  const handleSortChange = (order: string) => {
+    setSearchParams({ sort: order });
+  };
 
   // Fetch countries using useQuery
   const {
@@ -87,19 +79,26 @@ const Catalog: React.FC = () => {
     queryFn: async () => {
       const fetchedCountries: Country[] = await fetchCountries();
       const sortedCountries = sortCountries(fetchedCountries, initialSortOrder); // Apply initial sort order
-      catalogDispatch({ type: "initializeCountries", payload: sortedCountries });
+      catalogDispatch({
+        type: "initializeCountries",
+        payload: sortedCountries,
+      });
       return fetchedCountries;
     },
   });
 
-  const [state, catalogDispatch] = useReducer(catalogReducer, initialCatalogState);
-
- 
+  const [state, catalogDispatch] = useReducer(
+    catalogReducer,
+    initialCatalogState,
+  );
 
   useEffect(() => {
     if (countries.length > 0) {
       const sortedCountries = sortCountries(countries, initialSortOrder);
-      catalogDispatch({ type: "initializeCountries", payload: sortedCountries });
+      catalogDispatch({
+        type: "initializeCountries",
+        payload: sortedCountries,
+      });
     }
   }, [countries, initialSortOrder]); // Re-run effect on countries or sort order change
 
@@ -111,13 +110,14 @@ const Catalog: React.FC = () => {
     overscan: 5,
   });
 
-  
-
   const editCountryMutation = useMutation({
     mutationFn: editCountry,
     onSuccess: (currentCountry) => {
       queryClient.invalidateQueries({ queryKey: ["countries"] });
-      catalogDispatch({ type: "editCountry", payload: { country: currentCountry } });
+      catalogDispatch({
+        type: "editCountry",
+        payload: { country: currentCountry },
+      });
       setCurrentCountry(null);
     },
   });
@@ -130,8 +130,6 @@ const Catalog: React.FC = () => {
     },
   });
 
-
-
   const handleEditCountry = (updatedCountry: Country) => {
     editCountryMutation.mutate(updatedCountry);
   };
@@ -139,10 +137,6 @@ const Catalog: React.FC = () => {
   const handleDeleteCountry = (id: string) => {
     deleteCountryMutation.mutate(id);
   };
-
-  
-
-  
 
   if (isLoading)
     return (
@@ -177,17 +171,18 @@ const Catalog: React.FC = () => {
         {translations[currentLang].services.title}
       </h1>
 
-      <SortDropdown onSortChange = {handleSortChange} searchParams= {searchParams}/>
+      <SortDropdown
+        onSortChange={handleSortChange}
+        searchParams={searchParams}
+      />
 
-      <CardFrom catalogDispatch={catalogDispatch} state={state}/>
-
-
+      <CardFrom catalogDispatch={catalogDispatch} state={state} />
 
       <div
         ref={parentRef}
         className={styles.catalogContent}
         style={{
-          height: "400px", 
+          height: "400px",
           overflow: "auto",
           display: "flex",
         }}
@@ -254,13 +249,14 @@ const Catalog: React.FC = () => {
         </div>
       </div>
 
-
-
-      {isEditModalOpen && (  <EditForm onEditFormChange={handleEditFormChange}
-       onEditFormSubmit ={handleEditFormSubmit}
-       editFormState = {editFormState} 
-       setEditModalOpen = {setEditModalOpen}/>)}
-      
+      {isEditModalOpen && (
+        <EditForm
+          onEditFormChange={handleEditFormChange}
+          onEditFormSubmit={handleEditFormSubmit}
+          editFormState={editFormState}
+          setEditModalOpen={setEditModalOpen}
+        />
+      )}
     </>
   );
 };
