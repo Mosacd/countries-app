@@ -36,7 +36,7 @@ async function seedDatabase() {
         textEn: `${country.name.common} is a country in ${country.region}.`,
         textKa: `${country.name.common} არის ქვეყანა ${country.region}-ში.`,
         id: country.cca3.toLowerCase(),
-        likecount: 0,
+        likes: 0,
         isDeleted: false,
       })),
     );

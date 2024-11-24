@@ -8,7 +8,7 @@ export interface Country {
   textEn: string;
   textKa: string;
   id: string;
-  likecount: number;
+  likes: number;
   isDeleted: boolean;
 }
 
@@ -37,9 +37,11 @@ export type FormAction =
   | { type: "SetImageBase64"; payload: string }
   | { type: "ResetForm" };
 
+export type SortOrder = "likes" | "-likes" | null;
+
 export type State = {
   countries: Country[];
-  sortOrder: string;
+  sortOrder: SortOrder;
   countryCount: number;
 };
 

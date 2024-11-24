@@ -44,7 +44,7 @@ const CardFrom: React.FC<{
         capitalCityEn: formState.capitalCityEn,
         capitalCityKa: formState.capitalCityKa,
         imageUrl: formState.imageUrl,
-        likecount: 0,
+        likes: 0,
         textEn: "default text",
         textKa: "ტექსტი",
         isDeleted: false,

@@ -4,113 +4,44 @@ import {
   Action,
   FormState,
   FormAction,
-  Country,
+  // Country,
 } from "@/components/typesForCatalog";
 import { translations } from "../translations";
+// import { updateLikesOnBackend } from "@/API/requests";
 
-export const sortCountries = (countries: Country[], order: string) => {
-  const activeCountries = countries.filter((country) => !country.isDeleted);
-  const deletedCountries = countries.filter((country) => country.isDeleted);
 
-  if (order === "asc") {
-    activeCountries.sort((a, b) => a.likecount - b.likecount);
-  } else if (order === "desc") {
-    activeCountries.sort((a, b) => b.likecount - a.likecount);
-  }
-
-  return [...activeCountries, ...deletedCountries];
-};
 
 export const catalogReducer = (state: State, action: Action): State => {
   switch (action.type) {
     case "initializeCountries":
       return {
         ...state,
-        countries: action.payload,
+        countries: action.payload, // Data is already sorted by the server
         countryCount: action.payload.length,
       };
+    
 
-    case "likeAction": {
-      const updatedCountries = state.countries.map((country) =>
-        country.id === action.payload.id
-          ? { ...country, likecount: country.likecount + 1 }
-          : country,
-      );
-      return {
-        ...state,
-        countries: state.sortOrder
-          ? sortCountries(updatedCountries, state.sortOrder)
-          : updatedCountries,
-      };
-    }
+      // case "likeAction": {
+        
+      //   const updatedCountries = state.countries.map((country) =>{
+      //     if(country.id === action.payload.id){
+      //       updateLikesOnBackend(action.payload.id, country.likes + 1);
 
-    // case "deleteCountry": {
-    //   const updatedCountries = state.countries.filter(
-    //     (country) => country.id !== action.payload.id,
-    //   );
-
-    //   return {
-    //     ...state,
-    //     countries: updatedCountries,
-    //     countryCount: state.countryCount - 1,
-    //   };
-    // }
-
-    // case "restoreCountry": {
-    //   const restoredCountries = state.countries.map((country) =>
-    //     country.id === action.payload.id
-    //       ? { ...country, isDeleted: false }
-    //       : country,
-    //   );
-    //   const sortedCountries = state.sortOrder
-    //     ? sortCountries(restoredCountries, state.sortOrder)
-    //     : restoredCountries;
-
-    //   return {
-    //     ...state,
-    //     countries: sortedCountries,
-    //   };
-    // }
-
-    // case "editCountry": {
-    //   const updatedCountries = state.countries.map((country) =>
-    //     country.id === action.payload.country.id
-    //       ? action.payload.country
-    //       : country,
-    //   );
-    //   return {
-    //     ...state,
-    //     countries: state.sortOrder
-    //       ? sortCountries(updatedCountries, state.sortOrder)
-    //       : updatedCountries,
-    //   };
-    // }
-
-    case "addCountry": {
-      const updatedCountries = [...state.countries, action.payload.country];
-      const sortedCountries = state.sortOrder
-        ? sortCountries(updatedCountries, state.sortOrder)
-        : updatedCountries;
-
-      return {
-        ...state,
-        countries: sortedCountries,
-        countryCount: state.countryCount + 1,
-      };
-    }
-
-    case "sortCountries": {
-      const sortedCountries = sortCountries(
-        state.countries,
-        action.payload.order,
-      );
-
-      return {
-        ...state,
-        sortOrder: action.payload.order,
-        countries: sortedCountries,
-      };
-    }
+      //       return{ ...country, likes: country.likes + 1 }
+      //     } else{
+      //       return country;
+      //     }
+      //   }
+      //   );
+      
+        
+        
+      //   return {
+      //     ...state,
+      //     countries: updatedCountries, // Keep the same order as received from the backend
+      //   };
+      // }
+      
 
     default:
       return state;
@@ -209,7 +140,7 @@ export const formReducer = (
 // Export initial states
 export const initialCatalogState: State = {
   countries: [],
-  sortOrder: "",
+  sortOrder: null,
   countryCount: 0,
 };
 

@@ -1,14 +1,16 @@
 import { httpClient } from "..";
 import { Country } from "@/components/typesForCatalog";
+import { SortOrder } from "@/components/typesForCatalog";
 
 // Fetch all countries
 export const fetchCountries = async (
-  sortOrder: string = "",
+  sortOrder: SortOrder,
 ): Promise<Country[]> => {
   try {
     const response = await httpClient.get<Country[]>("/countries", {
-      params: { _sort: sortOrder },
+      params: { _sort: sortOrder || "likes" }, // Defaults to ascending
     });
+    // console.log("API Response:", response.data);
     return response.data;
   } catch (error) {
     console.error("Error fetching countries:", error);
@@ -49,4 +51,17 @@ export const deleteCountry = async (id: string): Promise<void> => {
     console.error(`Error deleting country with ID ${id}:`, error);
     throw error;
   }
+};
+
+
+export const updateLikesOnBackend = async (countryId: string, newLikes: number) => {
+  try {
+    await httpClient.patch(`/countries/${countryId}`, {
+      likes: newLikes,
+    });
+  } catch (error) {
+    console.error("Failed to update likes on the backend:", error);
+   
+  }
+  
 };

@@ -10,31 +10,26 @@
   text-align: center;
 }
 
-.catalogContent {
+/* .catalogContent {
   display: flex;
   justify-content: center;
   gap: 20px;
   flex-wrap: wrap;
-}
+} */
 
 .bottom button {
   margin: auto;
   font-size: 1.2rem;
-  margin-bottom: 10px;
   background-color: #05203c;
   border: 3px solid;
   border-radius: 10px;
   width: fit-content;
   padding: 10px;
-  border-bottom-left-radius: 30px;
-  border-bottom-right-radius: 30px;
   color: white;
   cursor: pointer;
 }
 
 .bottom {
-  width: 100%;
   display: flex;
-  justify-content: end;
-  gap: 0px;
+  gap: 20px;
 }
