@@ -1,4 +1,4 @@
-.textContent{
+.textContent {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -16,13 +16,12 @@
 .textContent h3 {
   margin: auto;
   font-size: 1.5rem;
-  
+
   background-color: #05203c;
   border: 3px solid;
   border-radius: 10px;
   width: fit-content;
   padding: 10px;
-
 }
 
 .textContent h4 {
@@ -34,5 +33,4 @@
   border-radius: 10px;
   width: fit-content;
   padding: 10px;
-
 }

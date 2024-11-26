@@ -1,14 +1,19 @@
-import React, { useReducer, useState, useRef, useEffect } from "react";
+import React, { /*useReducer*/  useState, useRef, useEffect, useMemo } from "react";
 import styles from "./catalog.module.css";
 import ProductCard from "./productCard";
-import { Country } from "@/components/typesForCatalog"; // all type imports
+import { Country, /*State*/ } from "@/components/typesForCatalog"; // all type imports
 import ImageComp from "./productCard/imageComp";
 import TextComp from "./productCard/textComp";
 import { useParams } from "react-router-dom";
 import { translations } from "../translations";
-import { fetchCountries, editCountry, deleteCountry, updateLikesOnBackend } from "@/API/requests";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { catalogReducer, initialCatalogState } from "./reducer";
+import {
+  fetchCountries,
+  editCountry,
+  deleteCountry,
+  updateLikesOnBackend,
+} from "@/API/requests";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+// import { /*catalogReducer*/ initialCatalogState } from "./reducer";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { useSearchParams } from "react-router-dom";
 // import { sortCountries } from "./reducer";
@@ -16,6 +21,7 @@ import SortDropdown from "./sortDropdown/sortDropdown";
 import CardFrom from "./cardForm/cardForm";
 import EditForm from "./editForm/editForm";
 import { SortOrder } from "@/components/typesForCatalog";
+import { useInfiniteQuery } from "@tanstack/react-query";
 
 const Catalog: React.FC = () => {
   const { lang } = useParams<{ lang: "en" | "ka" }>();
@@ -28,6 +34,8 @@ const Catalog: React.FC = () => {
     capitalCityEn: "",
     capitalCityKa: "",
   });
+
+  
 
   const openEditModal = (country: Country) => {
     setCurrentCountry(country);
@@ -64,41 +72,63 @@ const Catalog: React.FC = () => {
 
   // Retrieve the initial sort order from searchParams or set a default
   const initialSortOrder: SortOrder =
-  searchParams.get("sort") === "desc"
-    ? "-likes"
-    : searchParams.get("sort") === "asc"
-    ? "likes"
-    : null;
+    searchParams.get("sort") === "desc"
+      ? "-likes"
+      : searchParams.get("sort") === "asc"
+        ? "likes"
+        : null;
 
-    console.log("Initial Sort Order:", initialSortOrder);
-
+  console.log("Initial Sort Order:", initialSortOrder);
 
   // Handle sorting change to update URL and sort list in state
   const handleSortChange = (order: string) => {
     setSearchParams({ sort: order });
-    
   };
-  
-  
-  
 
-  // Fetch countries using useQuery
   const {
     data,
-    isLoading,
     error,
-  } = useQuery<Country[], Error>({
-    queryKey: ["countries", initialSortOrder], // Track sorting order in the query key
-    queryFn: async () => {
-      const data = await fetchCountries(initialSortOrder || "likes");
-      return data;
-    },
-     // Defaults to ascending order if `null`
+    isLoading,
+    isFetchingNextPage,
+    fetchNextPage,
+    hasNextPage,
+  } = useInfiniteQuery({
+    queryKey: ["countries", initialSortOrder], // Include sorting in queryKey
+    queryFn: ({ pageParam = 0 }) => fetchCountries(initialSortOrder || "likes", pageParam, 10), // Fetch 10 items per page
+    getNextPageParam: (lastPage) => lastPage.nextOffset, // Define the next offset
+    initialPageParam: 0, // Start from offset 0
   });
   
+  const countries = useMemo(() => {
+    return data?.pages.flatMap((page) => page.data) || [];
+  }, [data?.pages]);
 
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const target = entries[0];
+        if (target.isIntersecting && hasNextPage) {
+          fetchNextPage();
+        }
+      },
+      { threshold: 1.0 }
+    );
+  
+    const bottomMarker = document.querySelector("#bottom-marker");
+    if (bottomMarker) observer.observe(bottomMarker);
+  
+    return () => observer.disconnect();
+  }, [hasNextPage, fetchNextPage]);
+
+  
   const likeCountryMutation = useMutation({
-    mutationFn: async ({ countryId, newLikes }: { countryId: string; newLikes: number }) => {
+    mutationFn: async ({
+      countryId,
+      newLikes,
+    }: {
+      countryId: string;
+      newLikes: number;
+    }) => {
       await updateLikesOnBackend(countryId, newLikes);
     },
     onSuccess: () => {
@@ -107,30 +137,31 @@ const Catalog: React.FC = () => {
     },
   });
 
-  const [state, catalogDispatch] = useReducer(
-    catalogReducer,
-    initialCatalogState,
-  );
 
-  
-  useEffect(() => {
-    if (!isLoading && !error) {
-      catalogDispatch({
-        type: "initializeCountries",
-        payload: data || [], // Update reducer with fetched countries
-      });
-    }
-  }, [data, isLoading, error]); // Re-run whenever fetched data or loading/error states change
-  
+//   const [state, setState] = useState<State>(initialCatalogState);
+
+//  const handleSetState = () =>{
+//   setState({
+//     ...state,
+//     countries: data || [], // Data is already sorted by the server
+//     countryCount: (data || []).length,
+//   });
+//  }
+
+//   useEffect(() => {
+//     if (!isLoading && !error) {
+//       handleSetState();
+//     }
+//   }, [data, isLoading, error]); // Re-run whenever fetched data or loading/error states change
+
   const handleLike = (countryId: string, currentLikes: number) => {
     likeCountryMutation.mutate({ countryId, newLikes: currentLikes + 1 });
   };
-  
 
-  
   const parentRef = useRef<HTMLDivElement>(null);
+
   const virtualizer = useVirtualizer({
-    count: state.countries.length,
+    count: countries.length,
     getScrollElement: () => parentRef.current,
     estimateSize: () => 150,
     overscan: 5,
@@ -138,21 +169,18 @@ const Catalog: React.FC = () => {
 
   const editCountryMutation = useMutation({
     mutationFn: editCountry,
-    onSuccess: (currentCountry) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["countries"] });
-      catalogDispatch({
-        type: "editCountry",
-        payload: { country: currentCountry },
-      });
+     
       setCurrentCountry(null);
     },
   });
 
   const deleteCountryMutation = useMutation({
     mutationFn: deleteCountry,
-    onSuccess: (_, id) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["countries"] });
-      catalogDispatch({ type: "deleteCountry", payload: { id } });
+    
     },
   });
 
@@ -163,6 +191,10 @@ const Catalog: React.FC = () => {
   const handleDeleteCountry = (id: string) => {
     deleteCountryMutation.mutate(id);
   };
+
+  useEffect(() => {
+    virtualizer.measure();
+  }, [countries,virtualizer]);
 
   if (isLoading)
     return (
@@ -202,7 +234,7 @@ const Catalog: React.FC = () => {
         searchParams={searchParams}
       />
 
-      <CardFrom catalogDispatch={catalogDispatch} state={state} />
+      <CardFrom countriesdata={countries}/>
 
       <div
         ref={parentRef}
@@ -211,11 +243,11 @@ const Catalog: React.FC = () => {
           borderWidth: "10px",
           borderRadius: "10px",
           borderColor: "#05203c",
-          borderStyle:"solid",
+          borderStyle: "solid",
           height: "600px",
           overflow: "auto",
           display: "flex",
-          padding: "20px"
+          padding: "20px",
         }}
       >
         <div
@@ -223,21 +255,20 @@ const Catalog: React.FC = () => {
             height: `${virtualizer.getTotalSize()}px`,
             width: "100%",
             position: "relative",
-            
           }}
         >
           {virtualizer.getVirtualItems().map((virtualRow) => {
-            const country = state.countries[virtualRow.index];
+            const country = countries[virtualRow.index];
             return (
               <div
                 key={country.id}
                 style={{
                   position: "absolute",
-                  top: 0,
+                  top: virtualRow.start,
                   left: 0,
                   width: "100%",
-                  
-                  transform: `translateY(${virtualRow.start}px)`,
+
+                  // transform: `translateY(${virtualRow.start}px)`,
                 }}
               >
                 <ProductCard id={country.id}>
@@ -258,8 +289,7 @@ const Catalog: React.FC = () => {
                     {!country.isDeleted && (
                       <>
                         <button
-                          onClick={() => handleLike(country.id, country.likes)
-                          }
+                          onClick={() => handleLike(country.id, country.likes)}
                         >
                           {translations[currentLang].services.card.like}{" "}
                           {country.likes}
@@ -275,7 +305,17 @@ const Catalog: React.FC = () => {
               </div>
             );
           })}
+          <div
+    id="bottom-marker"
+    style={{
+      position: "absolute",
+      bottom: 0,
+      height: "1px",
+      width: "100%",
+    }}
+  />
         </div>
+        {isFetchingNextPage && <div>Loading more countries...</div>}
       </div>
 
       {isEditModalOpen && (

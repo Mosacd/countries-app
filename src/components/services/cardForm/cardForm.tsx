@@ -1,19 +1,18 @@
-import { FormState, FormAction, Action } from "@/components/typesForCatalog";
+import { FormState, FormAction } from "@/components/typesForCatalog";
 import { addCountry } from "@/API/requests";
 import { formReducer, initialFormState } from ".././reducer";
 import { useReducer } from "react";
 import { useParams } from "react-router-dom";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
-import { Dispatch } from "react";
-import { State } from "@/components/typesForCatalog";
+
+// import { State } from "@/components/typesForCatalog";
 import { translations } from "@/components/translations";
 import { Country } from "@/components/typesForCatalog";
 import styles from "./cardForm.module.css";
 
 const CardFrom: React.FC<{
-  catalogDispatch: Dispatch<Action>;
-  state: State;
-}> = ({ catalogDispatch, state }) => {
+  countriesdata: Country[]
+}> = ({countriesdata}) => {
   const { lang } = useParams<{ lang: "en" | "ka" }>();
   const currentLang = lang || "en";
 
@@ -27,9 +26,8 @@ const CardFrom: React.FC<{
   // useMutation for adding a country
   const addCountryMutation = useMutation({
     mutationFn: addCountry,
-    onSuccess: (newCountry) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["countries"] });
-      catalogDispatch({ type: "addCountry", payload: { country: newCountry } });
     },
   });
 
@@ -37,7 +35,7 @@ const CardFrom: React.FC<{
     e.preventDefault();
     if (isFormValid) {
       const newCountry: Country = {
-        id: (state.countryCount + 1).toString(),
+        id: (countriesdata.length + 1).toString(),
         nameEn: formState.countryNameEn,
         nameKa: formState.countryNameKa,
         population: parseInt(formState.population),

@@ -1,52 +1,12 @@
 // reducers.ts
 import {
-  State,
-  Action,
+  // State,
   FormState,
   FormAction,
-  // Country,
 } from "@/components/typesForCatalog";
 import { translations } from "../translations";
-// import { updateLikesOnBackend } from "@/API/requests";
 
 
-
-export const catalogReducer = (state: State, action: Action): State => {
-  switch (action.type) {
-    case "initializeCountries":
-      return {
-        ...state,
-        countries: action.payload, // Data is already sorted by the server
-        countryCount: action.payload.length,
-      };
-    
-
-      // case "likeAction": {
-        
-      //   const updatedCountries = state.countries.map((country) =>{
-      //     if(country.id === action.payload.id){
-      //       updateLikesOnBackend(action.payload.id, country.likes + 1);
-
-      //       return{ ...country, likes: country.likes + 1 }
-      //     } else{
-      //       return country;
-      //     }
-      //   }
-      //   );
-      
-        
-        
-      //   return {
-      //     ...state,
-      //     countries: updatedCountries, // Keep the same order as received from the backend
-      //   };
-      // }
-      
-
-    default:
-      return state;
-  }
-};
 
 export const formReducer = (
   state: FormState,
@@ -138,11 +98,11 @@ export const formReducer = (
 };
 
 // Export initial states
-export const initialCatalogState: State = {
-  countries: [],
-  sortOrder: null,
-  countryCount: 0,
-};
+// export const initialCatalogState: State = {
+//   countries: [],
+//   sortOrder: null,
+//   countryCount: 0,
+// };
 
 export const initialFormState: FormState = {
   countryNameKa: "",
