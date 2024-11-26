@@ -1,7 +1,12 @@
-import React, { /*useReducer*/  useState, useRef, useEffect, useMemo } from "react";
+import React, {
+  /*useReducer*/ useState,
+  useRef,
+  useEffect,
+  useMemo,
+} from "react";
 import styles from "./catalog.module.css";
 import ProductCard from "./productCard";
-import { Country, /*State*/ } from "@/components/typesForCatalog"; // all type imports
+import { Country /*State*/ } from "@/components/typesForCatalog"; // all type imports
 import ImageComp from "./productCard/imageComp";
 import TextComp from "./productCard/textComp";
 import { useParams } from "react-router-dom";
@@ -34,8 +39,6 @@ const Catalog: React.FC = () => {
     capitalCityEn: "",
     capitalCityKa: "",
   });
-
-  
 
   const openEditModal = (country: Country) => {
     setCurrentCountry(country);
@@ -94,11 +97,12 @@ const Catalog: React.FC = () => {
     hasNextPage,
   } = useInfiniteQuery({
     queryKey: ["countries", initialSortOrder], // Include sorting in queryKey
-    queryFn: ({ pageParam = 0 }) => fetchCountries(initialSortOrder || "likes", pageParam, 10), // Fetch 10 items per page
+    queryFn: ({ pageParam = 0 }) =>
+      fetchCountries(initialSortOrder || "likes", pageParam, 10), // Fetch 10 items per page
     getNextPageParam: (lastPage) => lastPage.nextOffset, // Define the next offset
     initialPageParam: 0, // Start from offset 0
   });
-  
+
   const countries = useMemo(() => {
     return data?.pages.flatMap((page) => page.data) || [];
   }, [data?.pages]);
@@ -111,16 +115,15 @@ const Catalog: React.FC = () => {
           fetchNextPage();
         }
       },
-      { threshold: 1.0 }
+      { threshold: 1.0 },
     );
-  
+
     const bottomMarker = document.querySelector("#bottom-marker");
     if (bottomMarker) observer.observe(bottomMarker);
-  
+
     return () => observer.disconnect();
   }, [hasNextPage, fetchNextPage]);
 
-  
   const likeCountryMutation = useMutation({
     mutationFn: async ({
       countryId,
@@ -137,22 +140,21 @@ const Catalog: React.FC = () => {
     },
   });
 
+  //   const [state, setState] = useState<State>(initialCatalogState);
 
-//   const [state, setState] = useState<State>(initialCatalogState);
+  //  const handleSetState = () =>{
+  //   setState({
+  //     ...state,
+  //     countries: data || [], // Data is already sorted by the server
+  //     countryCount: (data || []).length,
+  //   });
+  //  }
 
-//  const handleSetState = () =>{
-//   setState({
-//     ...state,
-//     countries: data || [], // Data is already sorted by the server
-//     countryCount: (data || []).length,
-//   });
-//  }
-
-//   useEffect(() => {
-//     if (!isLoading && !error) {
-//       handleSetState();
-//     }
-//   }, [data, isLoading, error]); // Re-run whenever fetched data or loading/error states change
+  //   useEffect(() => {
+  //     if (!isLoading && !error) {
+  //       handleSetState();
+  //     }
+  //   }, [data, isLoading, error]); // Re-run whenever fetched data or loading/error states change
 
   const handleLike = (countryId: string, currentLikes: number) => {
     likeCountryMutation.mutate({ countryId, newLikes: currentLikes + 1 });
@@ -171,7 +173,7 @@ const Catalog: React.FC = () => {
     mutationFn: editCountry,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["countries"] });
-     
+
       setCurrentCountry(null);
     },
   });
@@ -180,7 +182,6 @@ const Catalog: React.FC = () => {
     mutationFn: deleteCountry,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["countries"] });
-    
     },
   });
 
@@ -194,7 +195,7 @@ const Catalog: React.FC = () => {
 
   useEffect(() => {
     virtualizer.measure();
-  }, [countries,virtualizer]);
+  }, [countries, virtualizer]);
 
   if (isLoading)
     return (
@@ -234,7 +235,7 @@ const Catalog: React.FC = () => {
         searchParams={searchParams}
       />
 
-      <CardFrom countriesdata={countries}/>
+      <CardFrom countriesdata={countries} />
 
       <div
         ref={parentRef}
@@ -306,14 +307,14 @@ const Catalog: React.FC = () => {
             );
           })}
           <div
-    id="bottom-marker"
-    style={{
-      position: "absolute",
-      bottom: 0,
-      height: "1px",
-      width: "100%",
-    }}
-  />
+            id="bottom-marker"
+            style={{
+              position: "absolute",
+              bottom: 0,
+              height: "1px",
+              width: "100%",
+            }}
+          />
         </div>
         {isFetchingNextPage && <div>Loading more countries...</div>}
       </div>

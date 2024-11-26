@@ -5,7 +5,7 @@ import { SortOrder } from "@/components/typesForCatalog";
 export const fetchCountries = async (
   sortOrder: SortOrder,
   start: number,
-  limit: number
+  limit: number,
 ): Promise<{ data: Country[]; nextOffset: number | null }> => {
   try {
     const response = await httpClient.get<Country[]>("/countries", {
@@ -24,7 +24,6 @@ export const fetchCountries = async (
     throw error;
   }
 };
-
 
 // Add a new country
 export const addCountry = async (country: Country): Promise<Country> => {

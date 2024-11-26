@@ -11,8 +11,8 @@ import { Country } from "@/components/typesForCatalog";
 import styles from "./cardForm.module.css";
 
 const CardFrom: React.FC<{
-  countriesdata: Country[]
-}> = ({countriesdata}) => {
+  countriesdata: Country[];
+}> = ({ countriesdata }) => {
   const { lang } = useParams<{ lang: "en" | "ka" }>();
   const currentLang = lang || "en";
 

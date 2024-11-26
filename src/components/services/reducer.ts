@@ -6,8 +6,6 @@ import {
 } from "@/components/typesForCatalog";
 import { translations } from "../translations";
 
-
-
 export const formReducer = (
   state: FormState,
   action: FormAction,
